@@ -1,0 +1,28 @@
+
+* {
+ padding: 0;
+ margin: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+.overlay {
+  background: rgba(0,0,0,0.4);
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999 !important;
+}
+
+#account-modal {
+   background: #fff;
+   width: 25%;
+   height: 320px;
+   padding: 25px;
+   border-radius: 25px;
+   margin: 5% auto 0 auto;
+}
