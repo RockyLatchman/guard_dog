@@ -21,6 +21,21 @@ def homepage():
 def signin():
     return render_template('signin.html')
 
+@app.route('/forgot-password')
+def forgot_password():
+    pass
+
+@app.route('/check-email')
+def check_email():
+    pass
+
+@app.route('/change=password')
+def change_password():
+    pass
+
+@app.route('/reset-password')
+def reset_password():
+    pass
 
 @app.route('/signout')
 def signout():
