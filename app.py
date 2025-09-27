@@ -10,17 +10,17 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] =  os.environ.get('SECRET_KEY')
 db_engine = create_engine(os.environ.get('SQLALCHEMY_DATABASE_URI'))
 
-@app.route('/')
+@app.route('/', methods=['GET','POST'])
+@app.route('/register', methods=['GET','POST'])
+@app.route('/register/', methods=['GET','POST'])
 def homepage():
     return render_template('index.html')
 
-@app.route('/register', methods=['POST'])
-def register():
-    pass
-
-@app.route('/signin', methods=['POST'])
+@app.route('/signin', methods=['GET','POST'])
+@app.route('/signin/', methods=['GET','POST'])
 def signin():
-    pass
+    return render_template('signin.html')
+
 
 @app.route('/signout')
 def signout():
@@ -64,4 +64,4 @@ def remove_account(account_id):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
