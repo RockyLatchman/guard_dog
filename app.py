@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from sqlmodel import create_engine
 from flask_wtf import CSRFProtect
 from models import *
+from datetime import datetime
 import os
 
 load_dotenv('.env')
@@ -72,17 +73,67 @@ def remove_note(note_id):
 
 @app.route('/account-manager', methods=['GET', 'POST'])
 def account_manager():
-    pass
+    accounts = [
+        {
+           'account_id' : '789678464354623',
+           'name' : 'Edison Electric',
+           'email' : 'me@ex.net',
+           'password' : 'test_123344',
+           'date_added' : datetime.now(),
+           'mobile' : '909551234',
+           'category' : 'Utilities',
+           'due_date' : datetime(2025, 10, 26),
+           'amount' : 120,
+           'note' : 'You have a 5 day grace period'
+        },
+        {
+           'account_id' : '67845653542w5642',
+           'name' : 'Wells Fargo',
+           'email' : 'me@ex.net',
+           'password' : 'test_123344',
+           'date_added' : datetime(2025, 9, 12),
+           'mobile' : '909551234',
+           'category' : 'Banking',
+           'due_date' : datetime(2025, 8, 29),
+           'amount' : None,
+           'note' : 'You have a 5 day grace period'
+        },
+        {
+           'account_id' : '46326534245324500',
+           'name' : 'Netflix',
+           'email' : 'me@ex.net',
+           'password' : 'test_123344',
+           'date_added' : datetime(2025, 8, 26),
+           'mobile' : '909551234',
+           'category' : 'Entertainment',
+           'due_date' : datetime(2025, 10, 10),
+           'amount' : 12.99,
+           'note' : 'You have a 5 day grace period'
+        },
+        {
+           'account_id' : '8686456734645353425',
+           'name' : 'Hulu',
+           'email' : 'me@ex.net',
+           'password' : 'test_123344',
+           'date_added' : datetime(2025, 9, 12),
+           'mobile' : '909551234',
+           'category' : 'Entertainment',
+           'due_date' : datetime(2025, 11, 2),
+           'amount' : 18.99,
+           'note' : 'You have a 5 day grace period'
+        }
+    ]
+    return render_template('accounts.html', accounts=accounts)
 
 @app.route('/account-manager/view/<account_id>')
 def view_account(account_id):
     pass
 
-@app.route('/account-manager/edit/<account_id>', methods=['PUT'])
+@app.route('/account-manager/edit/<account_id>', methods=['POST'])
 def edit_account(account_id):
     pass
 
-@app.route('/account-manager/remove/<account_id>', methods=['DELETE'])
+@app.route('/account-manager/remove/<account_id>', methods=['POST'])
 def remove_account(account_id):
     pass
 

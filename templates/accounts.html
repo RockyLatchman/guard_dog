@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  {% include 'partials/menu.html' %}
+  <main>
+      <header><a href="">Sign out</a></header>
+      <div class="accounts-card">
+        <h3>Accounts</h3>
+            {% for account in accounts %}
+           <div class="account">
+               <div class="account-details">
+               <ul>
+                 <li>{{ account['name'] }}</li>
+                 <li>{{ account['category'] }}</li>
+               </ul>
+               <button hx-post="{{ url_for('edit_account', account_id=account['account_id'])}}">Update</button>
+               <button hx-post="{{ url_for('remove_account', account_id=account['account_id'])}}">Remove</button>
+              </div>
+           </div>
+            {% endfor %}
+          <button hx-get="{{ account_manager }}">Add item</button>
+          <button>Next&raquo;</button>
+      </div>
+  </main>
+</div>
+{% endblock %}
