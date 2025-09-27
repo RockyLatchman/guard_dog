@@ -1,0 +1,32 @@
+{% block content %}
+<div class="flex-container">
+   <div class="left-column">
+       <header>
+           <div id="logo">
+               <img src="{{ url_for('static', filename='images/logo.png') }}">
+               <h1>Guard Dog</h1>
+           </div>
+       </header>
+       <div class="hero">
+           <h3>Online Password Manager</h3>
+           <p>Save passwords, account details and important notes</p>
+           <div class="features">
+               <ul>
+                  <li><i class="fa-solid fa-lock"></i>Secure passwords</li>
+                  <li><i class="fa-solid fa-clipboard-list"></i>Save notes</li>
+               </ul>
+           </div>
+       </div>
+   </div>
+   <div class="right-column">
+    <form method="post">
+       <input type="text" name="fullname" placeholder="Fullname" required>
+       <input type="email" name="email" placeholder="E-mail" required>
+       <input type="password" name="password" placeholder="Password" required>
+       <input type="password" name="confirm-password" placeholder="Confirm password" required>
+       <input type="submit" value="Sign up">
+       <input type="submit" value="Sign in"
+    </form>
+  </div>
+</div>
+{% endblock %}

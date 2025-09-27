@@ -12,7 +12,7 @@ db_engine = create_engine(os.environ.get('SQLALCHEMY_DATABASE_URI'))
 
 @app.route('/')
 def homepage():
-    pass
+    return render_template('index.html')
 
 @app.route('/register', methods=['POST'])
 def register():
