@@ -2,12 +2,14 @@ from flask import Flask, render_template, redirect, url_for
 from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
 from sqlmodel import create_engine
+from flask_wtf import CSRFProtect
 from models import *
 import os
 
 load_dotenv('.env')
 app = Flask(__name__)
 app.config['SECRET_KEY'] =  os.environ.get('SECRET_KEY')
+csrf = CSRFProtect(app)
 db_engine = create_engine(os.environ.get('SQLALCHEMY_DATABASE_URI'))
 
 @app.route('/', methods=['GET','POST'])
@@ -48,8 +50,9 @@ def signout():
     pass
 
 @app.route('/password-generator')
+@app.route('/password-generator/')
 def password_gen():
-    pass
+    return render_template('password_generator.html')
 
 @app.route('/notes', methods=['GET', 'POST'])
 def notes():
@@ -81,6 +84,10 @@ def edit_account(account_id):
 
 @app.route('/account-manager/remove/<account_id>', methods=['DELETE'])
 def remove_account(account_id):
+    pass
+
+@app.route('/settings')
+def settings():
     pass
 
 
