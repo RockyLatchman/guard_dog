@@ -28,9 +28,14 @@ def forgot_password():
 
 @app.route('/check-email')
 def check_email():
+    return render_template('check_email.html')
+
+@app.route('/send-link')
+def send_link():
+    #route to email link to user
     pass
 
-@app.route('/change=password')
+@app.route('/change-password')
 def change_password():
     pass
 
