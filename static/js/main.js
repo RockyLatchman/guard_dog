@@ -2,6 +2,7 @@
 
 const accountModalHTML = `
       <div id="account-modal">
+      <a href="" class="close">Close</a>
        <form method="post" action="/account-manager">
           <input type="text" name="name" placeholder="Name" required>
           <input type="email" name="email" placeholder="E-mail" required>
