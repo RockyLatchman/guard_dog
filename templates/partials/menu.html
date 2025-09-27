@@ -1,0 +1,16 @@
+<div class="sidebar">
+    <header>
+        <div id="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}">
+            <h1>Guard Dog</h1>
+        </div>
+    </header>
+    <nav>
+      <ul>
+        <li><i class="fa-solid fa-lock"><a href="{{ url_for('password_gen')}}">Password Generator</a></li>
+        <li><i class="fa-solid fa-clipboard-list"><a href="{{ url_for('notes')}}">Notes</a></li>
+        <li><i class="fa-solid fa-user"></i><a href="{{ url_for('account_manager')}}">Account Manager</a></li>
+        <li><i class="fa-solid fa-gear"></i><a href="{{ url_for('settings')}}">Settings</a></li>
+      </ul>
+    </nav>
+</div>
