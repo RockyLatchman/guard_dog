@@ -86,9 +86,10 @@ def edit_account(account_id):
 def remove_account(account_id):
     pass
 
-@app.route('/settings')
+@app.route('/settings', methods=['GET', 'POST'])
+@app.route('/settings/', methods=['GET', 'POST'])
 def settings():
-    pass
+    return render_template('settings.html')
 
 
 if __name__ == '__main__':
