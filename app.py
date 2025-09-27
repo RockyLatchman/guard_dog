@@ -1,8 +1,14 @@
 from flask import Flask, render_template, redirect, url_for
 from passlib.hash import pbkdf2_sha256
-from .models import *
+from dotenv import load_dotenv
+from sqlmodel import create_engine
+from models import *
+import os
 
+load_dotenv('.env')
 app = Flask(__name__)
+app.config['SECRET_KEY'] =  os.environ.get('SECRET_KEY')
+db_engine = create_engine(os.environ.get('SQLALCHEMY_DATABASE_URI'))
 
 @app.route('/')
 def homepage():
