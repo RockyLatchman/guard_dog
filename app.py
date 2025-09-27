@@ -22,8 +22,9 @@ def signin():
     return render_template('signin.html')
 
 @app.route('/forgot-password')
+@app.route('/forgot-password/')
 def forgot_password():
-    pass
+    return render_template('forgot_password.html')
 
 @app.route('/check-email')
 def check_email():
