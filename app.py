@@ -37,11 +37,11 @@ def send_link():
 
 @app.route('/change-password')
 def change_password():
-    pass
+    return render_template('change_password.html')
 
-@app.route('/reset-password')
-def reset_password():
-    pass
+@app.route('/password-reset')
+def password_reset():
+    return render_template('password_reset.html')
 
 @app.route('/signout')
 def signout():
