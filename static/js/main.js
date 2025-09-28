@@ -114,7 +114,6 @@ function editNote(){
       fetch(`/note/edit/${e.currentTarget.dataset.id}`)
         .then(response => response.json())
         .then(data => {
-            //console.log(JSON.stringify(data['note']))
             createModal(`
               <div class="note-modal">
                 <a href="" class="close">Close</a>

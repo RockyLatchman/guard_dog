@@ -8,6 +8,72 @@ html {
   box-sizing: border-box;
 }
 
+:root {
+  --sidebarColor:  #001A38;
+}
+
+.flex-container,
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+
+/*  Sidebar menu */
+
+.sidebar {
+  background: var(--sidebarColor);
+  width: 25%;
+  height: 100vh;
+}
+
+.sidebar header #logo {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 25px;
+}
+
+.sidebar #logo img  {
+  width: 34px;
+  height: 34px;
+}
+
+.sidebar h1 {
+  color: #E5F3FA;
+  font: 900 1.6em "Nunito Sans", sans-serif;
+  margin-left: 10px;
+}
+
+.sidebar nav {
+  padding: 25px;
+}
+
+
+.sidebar nav ul {
+
+}
+
+.sidebar nav ul li {
+  list-style-type: none;
+  color: #E5F3FA;
+  padding: 10px 0;
+}
+
+.sidebar nav ul li a {
+  text-decoration: none;
+  color: #E5F3FA;
+  padding-left: 8px;
+  font: 400 0.9em "Fira Sans", sans-serif;
+}
+
+
+
+/* modal windows */
+
+
 .overlay {
   background: rgba(0,0,0,0.4);
   width: 100%;
