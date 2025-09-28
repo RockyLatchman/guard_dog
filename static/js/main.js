@@ -50,7 +50,7 @@ function createModal(modalHTML){
 }
 
 function addAccountItem(){
-  if (location.pathname == '/account-manager') {
+  if (location.pathname == '/account-manager' || location.pathname == '/account-manager/') {
     const addAccountItem = document.querySelector('#add-item');
     addAccountItem.addEventListener('click', (e) => {
         e.preventDefault();
@@ -101,10 +101,12 @@ function editAccountItem() {
 }
 
 function addNote(){
-   const addNoteButton = document.querySelector('#add-note');
-   addNoteButton.addEventListener('click', (e) => {
-      createModal(noteModalHTML);
-   })
+  if(location.pathname == '/notes' || location.pathname == '/notes/'){
+    const addNoteButton = document.querySelector('#add-note');
+    addNoteButton.addEventListener('click', (e) => {
+       createModal(noteModalHTML);
+    })
+  }
 }
 
 function editNote(){
@@ -134,10 +136,33 @@ function editNote(){
   })
 }
 
+function generatePassword(){
+  if(location.pathname == '/password-generator/' || location.pathname == '/password-generator'){
+    const generatePasswordButton = document.querySelector('#generate-password');
+    generatePasswordButton.addEventListener('click', (e) => {
+          const passwdGenForm = document.querySelector('#passwdGenForm');
+          const fd = new FormData(passwdGenForm)
+          console.log(fd.get('password-length'))
+          fetch('/password-generator', {
+            method: 'POST',
+            body: fd
+          })
+          .then(response => response.json())
+          .then(data => {
+              document.querySelector('#clipboard').style.display = 'block';
+              document.querySelector('.password-card sup').style.display = 'block';
+              document.querySelector('#clipboard span').innerHTML = data['password'];
+          })
+         .catch(error => console.error('Error: ', error));
+    })
+  }
+}
+
 
 window.addEventListener('DOMContentLoaded', (e) => {
   addAccountItem();
   editAccountItem();
   addNote();
   editNote();
+  generatePassword();
 });

@@ -47,5 +47,5 @@ class Utilities:
     @classmethod
     def password_generator(cls, password_length: int, characters_option : CharacterOptions) -> str:
         characters = characters_option.value
-        password_result = [random.choice(characters)for _ in range(password_length)]
+        password_result = [random.choice(characters)for _ in range(int(password_length))]
         return ''.join(password_result)

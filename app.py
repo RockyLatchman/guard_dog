@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, jsonify
+from flask import Flask, render_template, redirect, url_for, jsonify, request
 from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
 from sqlmodel import create_engine
@@ -105,10 +105,18 @@ def password_reset():
 def signout():
     pass
 
-@app.route('/password-generator')
-@app.route('/password-generator/')
+@app.route('/password-generator', methods=['GET', 'POST'])
+@app.route('/password-generator/', methods=['GET', 'POST'])
 def password_gen():
-    return render_template('password_generator.html')
+   if request.method == 'POST':
+     characters = request.form.get('character-type').upper()
+     generated_password = Utilities.password_generator(
+         request.form.get('password-length'),
+         CharacterOptions[f"{characters}"]
+     )
+     return jsonify({'password' : generated_password})
+   return render_template('password_generator.html', character_types=CharacterOptions)
+
 
 @app.route('/notes', methods=['GET', 'POST'])
 def notes():
