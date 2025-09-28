@@ -17,6 +17,7 @@ const accountModalHTML = `
        </form>
       </div> `;
 
+
 function createOverlay(){
   const overlay = document.createElement('div');
   overlay.setAttribute('class', 'overlay');

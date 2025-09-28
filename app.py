@@ -67,6 +67,7 @@ accounts = [
 ]
 
 
+
 @app.route('/', methods=['GET','POST'])
 @app.route('/register', methods=['GET','POST'])
 @app.route('/register/', methods=['GET','POST'])
@@ -111,7 +112,41 @@ def password_gen():
 
 @app.route('/notes', methods=['GET', 'POST'])
 def notes():
-    pass
+    notes = [
+        {
+            'note_id' : 1,
+            'user_id' : 3,
+            'title' : 'Walk the dog',
+            'note' : 'Walk the dog in the morning, around lunch and twice in the evening',
+            'category' : 'Chores',
+            'date_added' : datetime.date(2025, 2, 12)
+        },
+        {
+            'note_id' : 2,
+            'user_id' : 3,
+            'title' : 'Practice Thai',
+            'note' : 'One hour in the morning daily',
+            'category' : 'Study',
+            'date_added' : datetime.date(2025, 3, 14)
+        },
+        {
+            'note_id' : 3,
+            'user_id' : 3,
+            'title' : 'Call mom',
+            'note' : 'Be sure you call her at least once a week',
+            'category' : 'Appointment',
+            'date_added' : datetime.date(2025, 6, 24)
+        },
+        {
+            'note_id' : 4,
+            'user_id' : 1,
+            'title' : 'Schedule Dr Appt',
+            'note' : 'Call Dr Mason and schedule an appt next week',
+            'category' : 'Appointment',
+            'date_added' : datetime.date(2025, 4, 10)
+        }
+    ]
+    return render_template('notes.html', notes=notes)
 
 @app.route('/note/view/<note_id>')
 def view_note(note_id):

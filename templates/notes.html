@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  {% include 'partials/menu.html' %}
+  <main>
+      <header><a href="">Sign out</a></header>
+      <div class="notes-card">
+        <h3>Notes</h3>
+            {% for note in notes %}
+           <div class="note">
+               <div class="note-details">
+               <ul>
+                 <li>{{ note['name'] }}</li>
+                 <li>{{ note['category'] }}</li>
+               </ul>
+               <button class="edit-note" data-id="{{ note['note_id'] }}">Update</button>
+               <button hx-post="{{ url_for('remove_account', account_id=note['note_id'])}}">Remove</button>
+              </div>
+           </div>
+            {% endfor %}
+          <button id="add-note">Add note</button>
+          <button>Next&raquo;</button>
+      </div>
+  </main>
+</div>
+{% endblock %}
