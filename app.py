@@ -152,9 +152,45 @@ def notes():
 def view_note(note_id):
     pass
 
-@app.route('/note/edit/<note_id>', methods=['PUT'])
+@app.route('/note/edit/<note_id>', methods=['GET', 'POST'])
 def edit_note(note_id):
-    pass
+    notes = [
+        {
+            'note_id' : 1,
+            'user_id' : 3,
+            'title' : 'Walk the dog',
+            'note' : 'Walk the dog in the morning, around lunch and twice in the evening',
+            'category' : 'Chores',
+            'date_added' : datetime.date(2025, 2, 12)
+        },
+        {
+            'note_id' : 2,
+            'user_id' : 3,
+            'title' : 'Practice Thai',
+            'note' : 'One hour in the morning daily',
+            'category' : 'Study',
+            'date_added' : datetime.date(2025, 3, 14)
+        },
+        {
+            'note_id' : 3,
+            'user_id' : 3,
+            'title' : 'Call mom',
+            'note' : 'Be sure you call her at least once a week',
+            'category' : 'Appointment',
+            'date_added' : datetime.date(2025, 6, 24)
+        },
+        {
+            'note_id' : 4,
+            'user_id' : 1,
+            'title' : 'Schedule Dr Appt',
+            'note' : 'Call Dr Mason and schedule an appt next week',
+            'category' : 'Appointment',
+            'date_added' : datetime.date(2025, 4, 10)
+        }
+    ]
+    note = [note for note in notes if str(note['note_id']) == note_id]
+    return jsonify({'note' : note})
+
 
 @app.route('/note/remove/<note_id>', methods=['DELETE'])
 def remove_note(note_id):

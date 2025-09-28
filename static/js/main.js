@@ -69,7 +69,7 @@ function showPassword(){
 function editAccountItem() {
   const accountIds = document.querySelectorAll('[data-id]');
   const editAccountButton = document.querySelectorAll('.edit-item');
-  editAccountButton.forEach((item, index) => {
+  editAccountButton.forEach((item) => {
       item.addEventListener('click', (e) => {
         fetch(`/account-manager/edit/${e.currentTarget.dataset.id}`)
           .then(response => response.json())
@@ -107,10 +107,38 @@ function addNote(){
    })
 }
 
+function editNote(){
+  const editNoteButtons = document.querySelectorAll('.edit-note');
+  editNoteButtons.forEach((edit_item) => {
+    edit_item.addEventListener('click', (e) => {
+      fetch(`/note/edit/${e.currentTarget.dataset.id}`)
+        .then(response => response.json())
+        .then(data => {
+            //console.log(JSON.stringify(data['note']))
+            createModal(`
+              <div class="note-modal">
+                <a href="" class="close">Close</a>
+                <h3>Notes</h3>
+                <form method="post" action="/notes">
+                  <label>Title</label>
+                  <input type="text" name="title" placeholder="title" value="${data['note'][0]['title']}" required>
+                  <label>E-mail</label>
+                  <input type="email" name="category" placeholder="category" value="${data['note'][0]['category']}" required>
+                  <label>Note</label>
+                  <textarea name="note" placeholder="Note">${data['note'][0]['note']}</textarea>
+                  <input type="submit" value="Save note">
+                </form>
+              </div> `)
+        })
+        .catch(error => console.error('Error: ', error));
+    })
+  })
+}
 
 
 window.addEventListener('DOMContentLoaded', (e) => {
   addAccountItem();
   editAccountItem();
   addNote();
+  editNote();
 });
