@@ -136,13 +136,23 @@ function editNote(){
   })
 }
 
+function copyPassword() {
+  const copy = document.querySelector('#copy-password');
+  copy.addEventListener('click', (e) => {
+      try {
+        navigator.clipboard.writeText(copy.textContent);
+      } catch(error) {
+          console.error('Failed to copy: ', error)
+      }
+  })
+}
+
 function generatePassword(){
   if(location.pathname == '/password-generator/' || location.pathname == '/password-generator'){
     const generatePasswordButton = document.querySelector('#generate-password');
     generatePasswordButton.addEventListener('click', (e) => {
           const passwdGenForm = document.querySelector('#passwdGenForm');
           const fd = new FormData(passwdGenForm)
-          console.log(fd.get('password-length'))
           fetch('/password-generator', {
             method: 'POST',
             body: fd
@@ -155,9 +165,9 @@ function generatePassword(){
           })
          .catch(error => console.error('Error: ', error));
     })
+    copyPassword();
   }
 }
-
 
 window.addEventListener('DOMContentLoaded', (e) => {
   addAccountItem();
