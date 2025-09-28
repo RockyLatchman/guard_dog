@@ -3,6 +3,7 @@
 const accountModalHTML = `
       <div class="account-modal">
       <a href="" class="close">Close</a>
+      <h3>Add account</h3>
        <form method="post" action="/account-manager">
           <input type="text" name="name" placeholder="Name" required>
           <input type="email" name="email" placeholder="E-mail" required>
@@ -17,6 +18,17 @@ const accountModalHTML = `
        </form>
       </div> `;
 
+const noteModalHTML = `
+    <div class="note-modal">
+      <a href="" class="close">Close</a>
+      <h3>Notes</h3>
+      <form method="post" action="/notes">
+        <input type="text" name="title" placeholder="Title" required>
+        <input type="email" name="category" placeholder="Category" required>
+        <textarea name="note" placeholder="Note"></textarea>
+        <input type="submit" value="Save note">
+      </form>
+    </div>`;
 
 function createOverlay(){
   const overlay = document.createElement('div');
@@ -88,7 +100,17 @@ function editAccountItem() {
      });
 }
 
+function addNote(){
+   const addNoteButton = document.querySelector('#add-note');
+   addNoteButton.addEventListener('click', (e) => {
+      createModal(noteModalHTML);
+   })
+}
+
+
+
 window.addEventListener('DOMContentLoaded', (e) => {
   addAccountItem();
   editAccountItem();
+  addNote();
 });

@@ -18,7 +18,8 @@ html {
   z-index: 999 !important;
 }
 
-.account-modal {
+.account-modal,
+.note-modal {
    background: #fff;
    width: 25%;
    height: 320px;
