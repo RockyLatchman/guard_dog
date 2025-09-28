@@ -1,7 +1,7 @@
 
 
 const accountModalHTML = `
-      <div id="account-modal">
+      <div class="account-modal">
       <a href="" class="close">Close</a>
        <form method="post" action="/account-manager">
           <input type="text" name="name" placeholder="Name" required>
@@ -17,20 +17,20 @@ const accountModalHTML = `
        </form>
       </div> `;
 
-function createTemplate(templateHTML){
-  const template = document.createElement('template');
-  template.innerHTML = templateHTML;
-  return template.content;
-}
-
 function createOverlay(){
   const overlay = document.createElement('div');
   overlay.setAttribute('class', 'overlay');
   return overlay;
 }
 
-function createModal(){
-  const modalTemplate = createTemplate(accountModalHTML);
+function createTemplate(templateHTML){
+  const template = document.createElement('template');
+  template.innerHTML = templateHTML;
+  return template.content;
+}
+
+function createModal(modalHTML){
+  const modalTemplate = createTemplate(modalHTML);
   const overlay = createOverlay();
   overlay.appendChild(modalTemplate);
   document.body.appendChild(overlay);
@@ -41,11 +41,53 @@ function addAccountItem(){
     const addAccountItem = document.querySelector('#add-item');
     addAccountItem.addEventListener('click', (e) => {
         e.preventDefault();
-        createModal();
+        createModal(accountModalHTML);
     });
   }
 }
 
+function showPassword(){
+  const password = document.querySelector('#password');
+  password.addEventListener('click', (e) => {
+       password.setAttribute('type', 'text');
+  })
+}
+
+function editAccountItem() {
+  const accountIds = document.querySelectorAll('[data-id]');
+  const editAccountButton = document.querySelectorAll('.edit-item');
+  editAccountButton.forEach((item, index) => {
+      item.addEventListener('click', (e) => {
+        fetch(`/account-manager/edit/${e.currentTarget.dataset.id}`)
+          .then(response => response.json())
+          .then(data => {
+            //refactor this
+               const date = new Date(data['account'][0]['due_date']);
+               createModal(`
+                  <div class="account-modal">
+                      <a href="" class="close">Close</a>
+                      <form method="post" action="/account-manager">
+                         <input type="text" name="name" placeholder="Name" value="${data['account'][0]['name']}" required>
+                         <input type="email" name="email" placeholder="E-mail" value="${data['account'][0]['email']}" required>
+                         <label>Click password field to show password</label>
+                         <input type="password" name="password" id="password" placeholder="Password" value="${data['account'][0]['password']}" required>
+                         <input type="tel" name="mobile" placeholder="Mobile" value="${data['account'][0]['mobile']}" required>
+                         <input type="text" name="category" placeholder="Category" value="${data['account'][0]['category']}" required>
+                         <label>Due date</label>
+                         <input type="text" name="due_date" value="${data['account'][0]['due_date']}" required>
+                         <input type="text" name="amount" placeholder="Amount" value="${data['account'][0]['amount']}" required>
+                         <textarea name="note" placeholder="Note">${data['account'][0]['note']}</textarea>
+                         <input type="submit" value="Add account">
+                      </form>
+                     </div> `);
+                     showPassword();
+           })
+           .catch(error => console.error('Error: ', error));
+        });
+     });
+}
+
 window.addEventListener('DOMContentLoaded', (e) => {
   addAccountItem();
+  editAccountItem();
 });

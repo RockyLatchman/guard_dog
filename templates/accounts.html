@@ -13,7 +13,7 @@
                  <li>{{ account['name'] }}</li>
                  <li>{{ account['category'] }}</li>
                </ul>
-               <button hx-post="{{ url_for('edit_account', account_id=account['account_id'])}}">Update</button>
+               <button class="edit-item" data-id="{{ account['account_id'] }}">Update</button>
                <button hx-post="{{ url_for('remove_account', account_id=account['account_id'])}}">Remove</button>
               </div>
            </div>
