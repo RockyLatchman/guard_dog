@@ -1,4 +1,7 @@
 
+
+/* Global */
+
 * {
  padding: 0;
  margin: 0;
@@ -40,6 +43,46 @@ header a {
 main {
   width: 80%;
   padding: 15px;
+}
+
+.password-card h3,
+.settings-card h3 {
+  color: #E5F3FA;
+  font: 700 1.2em "Fira Sans", sans-serif;
+  color:#001A38;
+}
+
+.password-card form ,
+.settings-card form {
+   width: 97%;
+   margin-top: 10px;
+}
+
+.password-card form input[type='text'],
+.settings-card form input[type='email'],
+.settings-card form input[type='password']{
+  width: 98.5%;
+  height: 30px;
+  padding-left: 5px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid rgba(201,201,201,0.8);
+  font: 300 0.9em "Fira Sans", sans-serif;
+  color:#001A38;
+  outline: transparent;
+}
+
+.password-card form input[type='button'],
+.settings-card form input[type='submit']{
+  background: #31AFE6;
+  font: 500 0.9em "Fira Sans", sans-serif;
+  color:#001A38;
+  width: 175px;
+  height: 40px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 
@@ -97,29 +140,6 @@ main {
    margin: 10% auto 0 auto;
 }
 
-.password-card h3 {
-  color: #E5F3FA;
-  font: 700 1.2em "Fira Sans", sans-serif;
-  color:#001A38;
-}
-
-.password-card form {
-   width: 97%;
-   margin-top: 10px;
-}
-
-.password-card form input[type='text'] {
-  width: 98.5%;
-  height: 30px;
-  padding-left: 5px;
-  margin: 10px 0;
-  border-radius: 5px;
-  border: 1px solid rgba(201,201,201,0.8);
-  font: 300 0.9em "Fira Sans", sans-serif;
-  color:#001A38;
-  outline: transparent;
-}
-
 .password-card form select {
   background: #fff;
   color:#A1A1A1;
@@ -129,17 +149,6 @@ main {
   border-radius: 5px;
   margin: 5px 0 15px 0;
   outline: transparent;
-}
-
-.password-card form input[type='button'] {
-  background: #31AFE6;
-  font: 500 0.9em "Fira Sans", sans-serif;
-  color:#001A38;
-  width: 175px;
-  height: 40px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
 }
 
 #clipboard {
@@ -173,11 +182,31 @@ main {
   display: none;
 }
 
+/* Settings */
+
+.settings-card {
+  background: #fff;
+  border-radius: 25px;
+  padding: 35px;
+  width: 40%;
+  margin: 10% auto 0 auto;
+}
+
+.settings-card form label {
+  color: #001A38;
+  font: 400 0.8em "Fira Sans", sans-serif;
+}
+
+/* Notes */
+
+
+
+
+/* Account manager */
 
 
 
 /* modal windows */
-
 
 .overlay {
   background: rgba(0,0,0,0.4);
