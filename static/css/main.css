@@ -216,7 +216,53 @@ main {
   padding-top: 20px;
 }
 
+.signin-card span {
+  display: inline-block;
+  font: 500 0.8em "Fira Sans", sans-serif;
+  color:#001A38;
+  text-align: left;
+  padding-top: 10px;
+  width: 100%;
+}
 
+.check-email {
+   width: 50% !important;
+}
+
+.check-email h3 {
+  text-align: left;
+  margin: 15px 0 25px 0;
+}
+
+.check-email i {
+  margin-right: 10px;
+  color:#001A38;
+}
+
+
+.signin-card p {
+  font: 400 0.9em "Fira Sans", sans-serif;
+  color:#001A38;
+  margin-top: 10px;
+  width: 100%;
+  line-height: 1.5em;
+}
+
+.signin-card ul li {
+  font: 400 0.8em "Fira Sans", sans-serif;
+  color:#001A38;
+  text-align: left;
+  padding-top: 20px;
+  margin-bottom: 15px;
+  width: 100%;
+  line-height: 1.8em;
+}
+
+.signin-card ul li a {
+  font: 500 1em "Fira Sans", sans-serif;
+  color:#001A38;
+  margin-left: 5px;
+}
 
 /*  Sidebar menu */
 

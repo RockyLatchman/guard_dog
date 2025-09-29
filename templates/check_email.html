@@ -20,9 +20,13 @@
        </div>
    </div>
    <div class="right-column">
-    <h3>Check e-mail</h3>
+   <div class="signin-card check-email">
+    <h3><i class="fa-solid fa-envelope"></i>Check your e-mail</h3>
     <p>A password reset link was sent to your e-mail address</p>
-    <span>Didn&apos;t receive the e-mail? <a href="{{ url_for('send_link')}}">Resend link</a></span>
+    <ul>
+      <li>Didn&apos;t receive the e-mail? <a href="{{ url_for('send_link')}}">Resend link</a></li>
+    </ul>
   </div>
+   </div>
 </div>
 {% endblock %}
