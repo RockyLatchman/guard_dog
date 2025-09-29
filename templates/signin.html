@@ -20,6 +20,7 @@
        </div>
    </div>
    <div class="right-column">
+    <div class="signin-card">
     <h3>Sign in</h3>
     <form method="post">
        <input type="email" name="email" placeholder="E-mail" required>
@@ -28,6 +29,7 @@
        <input type="submit" value="Sign up">
     </form>
     <span><a href="{{ url_for('forgot_password')}}">Forgot your password?</a></span>
+    </div>
   </div>
 </div>
 {% endblock %}
