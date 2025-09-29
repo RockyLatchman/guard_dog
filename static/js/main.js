@@ -113,6 +113,7 @@ function editNote(){
   const editNoteButtons = document.querySelectorAll('.edit-note');
   editNoteButtons.forEach((edit_item) => {
     edit_item.addEventListener('click', (e) => {
+      e.preventDefault();
       fetch(`/note/edit/${e.currentTarget.dataset.id}`)
         .then(response => response.json())
         .then(data => {

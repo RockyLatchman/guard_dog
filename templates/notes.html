@@ -12,14 +12,14 @@
                <ul>
                  <li>{{ note['name'] }}</li>
                  <li>{{ note['category'] }}</li>
-               </ul>
-               <button class="edit-note" data-id="{{ note['note_id'] }}">Update</button>
-               <button hx-post="{{ url_for('remove_account', account_id=note['note_id'])}}">Remove</button>
+                 <li><a href="" class="remove-note" hx-post="{{ url_for('remove_account', account_id=note['note_id'])}}">Remove</a></li>
+                 <li><a href="" class="edit-note" data-id="{{ note['note_id'] }}">Update</a></li>
+                </ul>
               </div>
            </div>
             {% endfor %}
           <button id="add-note">Add note</button>
-          <button>Next&raquo;</button>
+          <button id="pagination">Next&raquo;</button>
       </div>
   </main>
 </div>
