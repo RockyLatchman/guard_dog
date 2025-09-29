@@ -208,6 +208,15 @@ main {
   color:#E5F3FA;
 }
 
+.signin-card span a {
+  display: block;
+  font: 500 0.9em "Fira Sans", sans-serif;
+  color:#001A38;
+  text-align: center;
+  padding-top: 20px;
+}
+
+
 
 /*  Sidebar menu */
 
