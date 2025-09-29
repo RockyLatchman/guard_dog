@@ -57,7 +57,10 @@ main {
 .password-card h3,
 .settings-card h3,
 .notes-card h3,
- .note-modal h3 {
+.note-modal h3 ,
+.account-modal h3,
+.edit-account-modal h3,
+.accounts-card h3 {
   color: #E5F3FA;
   font: 700 1.2em "Fira Sans", sans-serif;
   color:#001A38;
@@ -69,11 +72,17 @@ main {
   margin-top: 10px;
 }
 
+.settings-card form label,
+.note-modal form label {
+  color: #001A38;
+  font: 400 0.8em "Fira Sans", sans-serif;
+}
+
 .password-card form input[type='text'],
 .settings-card form input[type='email'],
 .settings-card form input[type='password'],
 .note-modal form input[type='text'],
-.note-modal form input[type='email']{
+.note-modal form input[type='email'] {
   width: 98.5%;
   height: 30px;
   padding-left: 5px;
@@ -87,7 +96,9 @@ main {
 
 .password-card form input[type='button'],
 .settings-card form input[type='submit'],
-.note-modal form input[type='submit']{
+.note-modal form input[type='submit'],
+.account-modal form input[type='submit'],
+.edit-account-modal form input[type='submit']{
   background: #31AFE6;
   font: 500 0.9em "Fira Sans", sans-serif;
   color:#001A38;
@@ -187,14 +198,6 @@ main {
   display: none;
 }
 
-/* Settings */
-
-.settings-card form label,
-.note-modal form label {
-  color: #001A38;
-  font: 400 0.8em "Fira Sans", sans-serif;
-}
-
 /* Notes */
 
 .notes-card {
@@ -216,20 +219,23 @@ main {
   width: 100%;
 }
 
-.note-details ul {
+.note-details ul,
+ .account-details ul {
   width: 100%;
   padding: 15px 0 10px 0;
   border-bottom: 1px solid rgba(201,201,201,0.8);
 }
 
-.note-details ul li {
+.note-details ul li,
+.account-details ul li {
   display: inline;
   list-style-type: none;
   font: 400 0.8em "Fira Sans", sans-serif;
   color: #001A38;
 }
 
-.edit-note {
+.edit-note,
+.edit-item {
   font: 500 1em "Fira Sans", sans-serif;
   text-decoration: underline;
   text-transform: lowercase;
@@ -240,7 +246,8 @@ main {
   margin-top: 2px;
 }
 
-.remove-note {
+.remove-note,
+.remove-item {
   font: 500 1em "Fira Sans", sans-serif;
   text-decoration: underline;
   text-transform: lowercase;
@@ -251,11 +258,15 @@ main {
 }
 
 .edit-note:hover,
-.remove-note:hover  {
+.edit-item:hover,
+.remove-note:hover,
+.remove-item:hover
+{
   color:#31AFE6;
 }
 
-#add-note {
+#add-note,
+#add-item {
   background: #31AFE6;
   font: 500 0.9em "Fira Sans", sans-serif;
   color:#001A38;
@@ -267,7 +278,7 @@ main {
   cursor: pointer;
 }
 
-#pagination {
+.pagination {
   background: #31AFE6;
   font: 500 0.9em "Fira Sans", sans-serif;
   background: transparent;
@@ -278,10 +289,19 @@ main {
   float: right;
 }
 
-
 /* Account manager */
 
+.accounts-card {
+  background: #fff;
+  border-radius: 25px;
+  padding: 35px;
+  width: 50%;
+  margin: 10% auto 0 auto;
+}
 
+.accounts-card h3 {
+  margin-bottom: 10px;
+}
 
 /* modal windows */
 
@@ -299,11 +319,11 @@ main {
   margin-top: 15px;
 }
 
-.note-modal h3 {
+.note-modal h3,
+.account-modal h3 {
   margin-top: 35px;
 }
 
-.account-modal,
 .note-modal {
   background: #fff;
   width: 25%;
@@ -319,7 +339,33 @@ main {
   float: right;
 }
 
-.note-modal form textarea {
+.account-modal,
+.edit-account-modal {
+  background: #fff;
+  width: 50%;
+  height: auto;
+  padding: 35px;
+  border-radius: 25px;
+  margin: 5% auto 0 auto;
+}
+
+.account-modal form,
+.edit-account-modal form{
+  width: 97%;
+  margin-top: 15px;
+}
+
+.account-modal form label,
+.edit-account-modal form label {
+  display: inline-block;
+  color: #001A38;
+  font: 400 0.8em "Fira Sans", sans-serif;
+  margin: 15px 0 5px 0;
+}
+
+.account-modal form textarea,
+.note-modal form textarea,
+.edit-account-modal form textarea {
   width: 98.5%;
   height: 130px;
   padding: 10px 0 0 5px;
@@ -329,4 +375,80 @@ main {
   font: 300 0.9em "Fira Sans", sans-serif;
   color:#001A38;
   outline: transparent;
+}
+
+.account-modal form input[type='password'],
+.account-modal form input[name='amount'],
+.edit-account-modal form input[name='amount'],
+.edit-account-modal form input[name='mobile']{
+    width: 47.5%;
+    height: 30px;
+    padding-left: 5px;
+    border-radius: 5px;
+    border: 1px solid rgba(201,201,201,0.8);
+    font: 300 0.9em "Fira Sans", sans-serif;
+    color:#001A38;
+    outline: transparent;
+}
+
+.account-modal form input[type='email'],
+.edit-account-modal form input[name='due_date'],
+.edit-account-modal form input[type='password']{
+    width: 47.5%;
+    height: 30px;
+    height: 30px;
+    padding-left: 5px;
+    margin: 10px 17px 0 0;
+    border-radius: 5px;
+    border: 1px solid rgba(201,201,201,0.8);
+    font: 300 0.9em "Fira Sans", sans-serif;
+    color:#001A38;
+    outline: transparent;
+}
+
+.account-modal form input[type='tel']{
+    width: 47.5%;
+    height: 30px;
+    height: 30px;
+    padding-left: 5px;
+    margin: 10px 20px 0 0;
+    border-radius: 5px;
+    border: 1px solid rgba(201,201,201,0.8);
+    font: 300 0.9em "Fira Sans", sans-serif;
+    color:#001A38;
+    outline: transparent;
+}
+
+.account-modal form input[name='category']{
+    width: 47.5%;
+    height: 30px;
+    padding-left: 5px;
+    border-radius: 5px;
+    border: 1px solid rgba(201,201,201,0.8);
+    font: 300 0.9em "Fira Sans", sans-serif;
+    color:#001A38;
+    outline: transparent;
+}
+
+.edit-account-modal form input[name='name'],
+.edit-account-modal form input[type='email'],
+.account-modal form input[type='date'],
+.edit-account-modal form input[name='category'],
+.account-modal form input[name='name'] {
+    width: 98.5% !important;
+    height: 30px;
+    padding-left: 5px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid rgba(201,201,201,0.8);
+    outline: transparent;
+}
+
+.account-modal form input[name='amount']{
+    width: 98.5% !important;
+    height: 30px;
+    padding-left: 5px;
+    border-radius: 5px;
+    margin: 10px 0;
+    border: 1px solid rgba(201,201,201,0.8);
 }

@@ -6,20 +6,20 @@
       <header><a href="">Sign out</a></header>
       <div class="accounts-card">
         <h3>Accounts</h3>
+         <div class="account">
             {% for account in accounts %}
-           <div class="account">
                <div class="account-details">
                <ul>
                  <li>{{ account['name'] }}</li>
                  <li>{{ account['category'] }}</li>
+                 <li><a href="" class="remove-item" hx-post="{{ url_for('remove_account', account_id=account['account_id'])}}">Remove</a></li>
+                 <li><a href="" class="edit-item" data-id="{{ account['account_id'] }}">Update</a></li>
                </ul>
-               <button class="edit-item" data-id="{{ account['account_id'] }}">Update</button>
-               <button hx-post="{{ url_for('remove_account', account_id=account['account_id'])}}">Remove</button>
               </div>
-           </div>
             {% endfor %}
+            </div>
           <button id="add-item">Add item</button>
-          <button>Next&raquo;</button>
+          <button class="pagination">Next&raquo;</button>
       </div>
   </main>
 </div>

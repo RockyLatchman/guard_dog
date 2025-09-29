@@ -9,9 +9,9 @@ const accountModalHTML = `
           <input type="email" name="email" placeholder="E-mail" required>
           <input type="password" name="password" placeholder="Password" required>
           <input type="tel" name="mobile" placeholder="Mobile" required>
-          <input type="text" name="category" placeholder="Category" required>
-          <label>Due date</label>
-          <input type="date" name="due_date" required>
+          <input type="text" class="category" name="category" placeholder="Category" required>
+          <br><label>Due date</label><br>
+          <input type="date" class="due_date" name="due_date" required>
           <input type="text" name="amount" placeholder="Amount" required>
           <textarea name="note" placeholder="Note"></textarea>
           <input type="submit" value="Add account">
@@ -71,26 +71,28 @@ function editAccountItem() {
   const editAccountButton = document.querySelectorAll('.edit-item');
   editAccountButton.forEach((item) => {
       item.addEventListener('click', (e) => {
+        e.preventDefault();
         fetch(`/account-manager/edit/${e.currentTarget.dataset.id}`)
           .then(response => response.json())
           .then(data => {
             //refactor this
                const date = new Date(data['account'][0]['due_date']);
                createModal(`
-                  <div class="account-modal">
+                  <div class="edit-account-modal">
                       <a href="" class="close">Close</a>
+                      <h3>Edit account</h3>
                       <form method="post" action="/account-manager">
                          <input type="text" name="name" placeholder="Name" value="${data['account'][0]['name']}" required>
-                         <input type="email" name="email" placeholder="E-mail" value="${data['account'][0]['email']}" required>
-                         <label>Click password field to show password</label>
+                         <input type="email" name="email" placeholder="E-mail" value="${data['account'][0]['email']}" required><br>
+                         <label>Click password field to show password</label><br>
                          <input type="password" name="password" id="password" placeholder="Password" value="${data['account'][0]['password']}" required>
                          <input type="tel" name="mobile" placeholder="Mobile" value="${data['account'][0]['mobile']}" required>
-                         <input type="text" name="category" placeholder="Category" value="${data['account'][0]['category']}" required>
-                         <label>Due date</label>
-                         <input type="text" name="due_date" value="${data['account'][0]['due_date']}" required>
+                         <input type="text" class="category" name="category" placeholder="Category" value="${data['account'][0]['category']}" required>
+                         <br><label>Due date</label><br>
+                         <input type="text" class="due_date" name="due_date" value="${data['account'][0]['due_date']}" required>
                          <input type="text" name="amount" placeholder="Amount" value="${data['account'][0]['amount']}" required>
                          <textarea name="note" placeholder="Note">${data['account'][0]['note']}</textarea>
-                         <input type="submit" value="Add account">
+                         <input type="submit" value="Save changes">
                       </form>
                      </div> `);
                      showPassword();
