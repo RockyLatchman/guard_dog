@@ -19,12 +19,48 @@ body {
   --sidebarColor:  #001A38;
 }
 
+ul li {
+  list-style-type: none;
+}
+
 .flex-container,
 .container {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   width: 100%;
+  height: 100vh;
+}
+
+.flex-container .left-column {
+  background: var(--sidebarColor);
+  width: 50%;
+}
+
+.sidebar header #logo,
+.flex-container .left-column header #logo {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 25px;
+  margin-top: 40px;
+}
+
+.sidebar #logo img,
+.flex-container .left-column header #logo img {
+  width: 34px;
+  height: 34px;
+}
+
+.sidebar h1,
+.flex-container h1 {
+  color: #E5F3FA;
+  font: 900 1.6em "Nunito Sans", sans-serif;
+  margin-left: 10px;
+}
+
+.flex-container .right-column  {
+  width: 50%;
 }
 
 .container header {
@@ -46,13 +82,15 @@ main {
 }
 
 .password-card,
-.settings-card {
+.settings-card,
+.signin-card {
   background: #fff;
   border-radius: 25px;
   padding: 35px;
   width: 40%;
-  margin: 10% auto 0 auto;
+  margin: 12% auto 0 auto;
 }
+
 
 .password-card h3,
 .settings-card h3,
@@ -60,14 +98,16 @@ main {
 .note-modal h3 ,
 .account-modal h3,
 .edit-account-modal h3,
-.accounts-card h3 {
+.accounts-card h3,
+.signin-card h3 {
   color: #E5F3FA;
   font: 700 1.2em "Fira Sans", sans-serif;
   color:#001A38;
 }
 
 .password-card form ,
-.settings-card form {
+.settings-card form,
+.signin-card form {
   width: 97%;
   margin-top: 10px;
 }
@@ -82,7 +122,10 @@ main {
 .settings-card form input[type='email'],
 .settings-card form input[type='password'],
 .note-modal form input[type='text'],
-.note-modal form input[type='email'] {
+.note-modal form input[type='email'],
+.signin-card form input[type='text'],
+.signin-card form input[type='email'],
+.signin-card form input[type='password']{
   width: 98.5%;
   height: 30px;
   padding-left: 5px;
@@ -98,7 +141,8 @@ main {
 .settings-card form input[type='submit'],
 .note-modal form input[type='submit'],
 .account-modal form input[type='submit'],
-.edit-account-modal form input[type='submit']{
+.edit-account-modal form input[type='submit'],
+.signin-card form input[type='submit']{
   background: #31AFE6;
   font: 500 0.9em "Fira Sans", sans-serif;
   color:#001A38;
@@ -110,6 +154,61 @@ main {
   cursor: pointer;
 }
 
+/* Homepage */
+
+.hero {
+  margin: 120px 0 0 25px;
+}
+
+.hero h3 {
+  font: 900 1.4em "Nunito Sans", sans-serif;
+  color:#E5F3FA;
+  margin-bottom: 8px;
+}
+
+.hero p {
+  font: 500 0.9em "Fira Sans", sans-serif;
+  color:#E5F3FA;
+}
+
+.features ul {
+  margin-top: 20px;
+}
+
+.features ul li {
+  display: inline-block;
+  color:#E5F3FA;
+  background:#31AFE6;
+  border-radius: 15px;
+  width: 200px;
+  height: 45px;
+  margin-right: 10px;
+  font: 500 0.9em "Fira Sans", sans-serif;
+  text-align: center;
+  line-height: 3.2em;
+  color:#001A38;
+}
+
+.features ul li i {
+  color:#001A38;
+  margin-right: 5px;
+}
+
+.signin-card {
+  margin-top: 18%;
+  padding: 50px;
+}
+
+.signin-card form input[type='submit']{
+  width: 100%;
+}
+
+.signin-card form input[value='Sign in']{
+  background:#001A38;
+  color:#E5F3FA;
+}
+
+
 /*  Sidebar menu */
 
 .sidebar {
@@ -118,24 +217,6 @@ main {
   height: 100vh;
 }
 
-.sidebar header #logo {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  padding: 25px;
-  margin-top: 40px;
-}
-
-.sidebar #logo img  {
-  width: 34px;
-  height: 34px;
-}
-
-.sidebar h1 {
-  color: #E5F3FA;
-  font: 900 1.6em "Nunito Sans", sans-serif;
-  margin-left: 10px;
-}
 
 .sidebar nav {
   padding: 25px;
@@ -204,7 +285,7 @@ main {
   background: #fff;
   border-radius: 25px;
   padding: 35px;
-  width: 50%;
+  width: 60%;
   margin: 10% auto 0 auto;
 }
 
@@ -295,7 +376,7 @@ main {
   background: #fff;
   border-radius: 25px;
   padding: 35px;
-  width: 50%;
+  width: 60%;
   margin: 10% auto 0 auto;
 }
 
@@ -313,6 +394,8 @@ main {
   top: 0;
   left: 0;
   z-index: 999 !important;
+  display: flex;
+  justify-content: center;
 }
 
 .note-modal form {
@@ -330,7 +413,8 @@ main {
   height: auto;
   padding: 25px;
   border-radius: 25px;
-  margin: 8% auto 0 auto;
+  position: fixed;
+  top: 15%;
 }
 
 .close {
@@ -346,7 +430,8 @@ main {
   height: auto;
   padding: 35px;
   border-radius: 25px;
-  margin: 5% auto 0 auto;
+  position: fixed;
+  top: 7%;
 }
 
 .account-modal form,
