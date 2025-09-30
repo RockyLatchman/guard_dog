@@ -52,6 +52,11 @@ class Note(SQLModel, table=True):
     date_added: datetime
     user: Optional[User] = Relationship(back_populates='notes')
 
+    def __init__(self, title: str, note: str, category: str):
+       self.title = title
+       self.note = note
+       self.category = category
+
 class CharacterOptions(Enum):
     LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     ALPHANUMERIC = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
