@@ -6,6 +6,7 @@
       <header><a href="">Sign out</a></header>
       <div class="notes-card">
         <h3>Notes</h3>
+        {% if notes %}
             {% for note in notes %}
            <div class="note">
                <div class="note-details">
@@ -20,6 +21,10 @@
             {% endfor %}
           <button id="add-note">Add note</button>
           <button class="pagination">Next&raquo;</button>
+        {% else %}
+           <p>You have no notes saved</p>
+           <button id="add-note">Add note</button>
+        {% endif %}
       </div>
   </main>
 </div>

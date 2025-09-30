@@ -154,7 +154,7 @@ def notes():
             'date_added' : datetime.date(2025, 4, 10)
         }
     ]
-    return render_template('notes.html', notes=notes)
+    return render_template('notes.html')
 
 @app.route('/note/view/<note_id>')
 def view_note(note_id):
