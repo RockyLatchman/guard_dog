@@ -66,6 +66,9 @@ accounts = [
     }
 ]
 
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html')
 
 
 @app.route('/', methods=['GET','POST'])

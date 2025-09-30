@@ -83,14 +83,14 @@ main {
 
 .password-card,
 .settings-card,
-.signin-card {
+.signin-card,
+.missing-card {
   background: #fff;
   border-radius: 25px;
   padding: 35px;
   width: 40%;
   margin: 12% auto 0 auto;
 }
-
 
 .password-card h3,
 .settings-card h3,
@@ -99,7 +99,8 @@ main {
 .account-modal h3,
 .edit-account-modal h3,
 .accounts-card h3,
-.signin-card h3 {
+.signin-card h3,
+.missing-card h3 {
   color: #E5F3FA;
   font: 700 1.2em "Fira Sans", sans-serif;
   color:#001A38;
@@ -153,6 +154,13 @@ main {
   border-radius: 10px;
   cursor: pointer;
 }
+
+.missing-card p {
+  color: #001A38;
+  font: 400 0.8em "Fira Sans", sans-serif;
+  margin: 5px 0 25px 0;
+}
+
 
 /* Homepage */
 
