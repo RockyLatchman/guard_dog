@@ -161,6 +161,12 @@ main {
   margin: 5px 0 25px 0;
 }
 
+.notes-card p,
+.accounts-card p {
+  color: #001A38;
+  font: 400 0.8em "Fira Sans", sans-serif;
+  margin: 5px 0 0 0;
+}
 
 /* Homepage */
 
