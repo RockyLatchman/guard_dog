@@ -16,6 +16,11 @@ class User(SQLModel, table=True):
     accounts: List['Account'] = Relationship(back_populates='user')
     notes: List['Note'] = Relationship(back_populates='user')
 
+    def __init__(self, name: str, email: str, password: str)
+       self.name = name
+       self.email = email
+       self.password = password
+
 class Account(SQLModel, table=True):
     account_id :int = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key='user.user_id', exclude=True)
