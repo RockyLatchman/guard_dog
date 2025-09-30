@@ -7,6 +7,7 @@
       <div class="accounts-card">
         <h3>Accounts</h3>
          <div class="account">
+         {% if accounts %}
             {% for account in accounts %}
                <div class="account-details">
                <ul>
@@ -20,6 +21,10 @@
             </div>
           <button id="add-item">Add item</button>
           <button class="pagination">Next&raquo;</button>
+        {% else %}
+            <p>You have no accounts saved</p>
+            <button id="add-item">Add item</button>
+        {% endif %}
       </div>
   </main>
 </div>

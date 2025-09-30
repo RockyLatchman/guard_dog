@@ -120,40 +120,6 @@ def password_gen():
 
 @app.route('/notes', methods=['GET', 'POST'])
 def notes():
-    notes = [
-        {
-            'note_id' : 1,
-            'user_id' : 3,
-            'title' : 'Walk the dog',
-            'note' : 'Walk the dog in the morning, around lunch and twice in the evening',
-            'category' : 'Chores',
-            'date_added' : datetime.date(2025, 2, 12)
-        },
-        {
-            'note_id' : 2,
-            'user_id' : 3,
-            'title' : 'Practice Thai',
-            'note' : 'One hour in the morning daily',
-            'category' : 'Study',
-            'date_added' : datetime.date(2025, 3, 14)
-        },
-        {
-            'note_id' : 3,
-            'user_id' : 3,
-            'title' : 'Call mom',
-            'note' : 'Be sure you call her at least once a week',
-            'category' : 'Appointment',
-            'date_added' : datetime.date(2025, 6, 24)
-        },
-        {
-            'note_id' : 4,
-            'user_id' : 1,
-            'title' : 'Schedule Dr Appt',
-            'note' : 'Call Dr Mason and schedule an appt next week',
-            'category' : 'Appointment',
-            'date_added' : datetime.date(2025, 4, 10)
-        }
-    ]
     return render_template('notes.html')
 
 @app.route('/note/view/<note_id>')
@@ -206,7 +172,7 @@ def remove_note(note_id):
 
 @app.route('/account-manager', methods=['GET', 'POST'])
 def account_manager():
-    return render_template('accounts.html', accounts=accounts)
+    return render_template('accounts.html')
 
 @app.route('/account-manager/view/<account_id>')
 def view_account(account_id):
