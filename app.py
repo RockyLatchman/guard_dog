@@ -163,7 +163,10 @@ def edit_note(note_id):
         }
     ]
     note = [note for note in notes if str(note['note_id']) == note_id]
-    return jsonify({'note' : note})
+    if note:
+       return jsonify({'note' : note})
+    else:
+       return jsonify({'result' : 400})
 
 
 @app.route('/note/remove/<note_id>', methods=['DELETE'])
