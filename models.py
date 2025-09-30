@@ -1,6 +1,8 @@
+from os import name
 from typing import Optional, List
 from sqlmodel import Field, SQLModel, Relationship, Session, select
 from datetime import datetime, timezone
+from passlib.hash import pbkdf2_sha256
 from enum import Enum
 import random
 
@@ -25,8 +27,21 @@ class Account(SQLModel, table=True):
     due_date: datetime
     amount: int
     category: str
-    note: str
+    note: str | None = None
     user: Optional[User] = Relationship(back_populates='accounts')
+
+    def __init__(self, name: str, email: str, password: str, mobile: str, amount: int , category: str, note: str):
+        self.name = name
+        self.email = email
+        self.password = password
+        self.mobile = mobile
+        self.amount = amount
+        self.category = category
+        self.note = note
+
+
+
+
 
 class Note(SQLModel, table=True):
     note_id: int = Field(default=None, primary_key=True)
