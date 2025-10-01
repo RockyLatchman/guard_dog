@@ -70,7 +70,6 @@ accounts = [
 def not_found(e):
     return render_template('404.html')
 
-
 @app.route('/', methods=['GET','POST'])
 @app.route('/register', methods=['GET','POST'])
 @app.route('/register/', methods=['GET','POST'])

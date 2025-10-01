@@ -35,8 +35,14 @@ class User(SQLModel, table=True):
         except IntegrityError as e:
             raise ValueError('Registration failed') from e
 
-    def verify_password(self, password: str):
+    def _verify_password(self, password: str):
         return pbkdf2_sha256.verify(password, self.password)
+
+    def check_account(self, password, page_template):
+        if self._verify_password(password):
+            return page_template['dashboard']
+        return page_template['sign in']
+
 
 
 
