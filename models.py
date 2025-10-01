@@ -1,29 +1,45 @@
 from os import name
 from typing import Optional, List
 from sqlmodel import Field, SQLModel, Relationship, Session, select
+from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timezone
 from passlib.hash import pbkdf2_sha256
 from enum import Enum
 import random
 
 class User(SQLModel, table=True):
-    user_id: int = Field(default=None, primary_key=True)
+    __tablename__ = 'users'
+    user_id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     email: str = Field(unique=True)
     password: str
-    date_added: datetime
-    last_active: datetime
+    date_added: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    last_active: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     accounts: List['Account'] = Relationship(back_populates='user')
     notes: List['Note'] = Relationship(back_populates='user')
 
-    def __init__(self, name: str, email: str, password: str)
+    def __init__(self, name: str, email: str, password: str):
        self.name = name
        self.email = email
        self.password = password
+       self.date_added = datetime.now(timezone.utc)
+       self.last_active = datetime.now(timezone.utc)
+
+    def register(self, session: Session):
+        try:
+            self.password = pbkdf2_sha256.hash(self.password)
+            session.add(self)
+            session.commit()
+            session.refresh(self)
+            return self
+        except IntegrityError as e:
+            raise ValueError('Registration failed') from e
+
+
 
 class Account(SQLModel, table=True):
-    account_id :int = Field(default=None, primary_key=True)
-    user_id: int = Field(foreign_key='user.user_id', exclude=True)
+    account_id : Optional[int] = Field(default=None, primary_key=True)
+    user_id: Optional[int] = Field(default=None, foreign_key='users.user_id', exclude=True)
     name: str
     mobile: str
     email: str = Field(unique=True)
@@ -49,8 +65,8 @@ class Account(SQLModel, table=True):
 
 
 class Note(SQLModel, table=True):
-    note_id: int = Field(default=None, primary_key=True)
-    user_id: int = Field(foreign_key='user.user_id', exclude=True)
+    note_id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: Optional[int] = Field(default=None, foreign_key='users.user_id', exclude=True)
     title: str
     note: str
     category: str
@@ -61,6 +77,9 @@ class Note(SQLModel, table=True):
        self.title = title
        self.note = note
        self.category = category
+
+
+
 
 class CharacterOptions(Enum):
     LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
