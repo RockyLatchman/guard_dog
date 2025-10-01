@@ -35,6 +35,9 @@ class User(SQLModel, table=True):
         except IntegrityError as e:
             raise ValueError('Registration failed') from e
 
+    def verify_password(self, password: str):
+        return pbkdf2_sha256.verify(password, self.password)
+
 
 
 class Account(SQLModel, table=True):
@@ -59,6 +62,8 @@ class Account(SQLModel, table=True):
         self.amount = amount
         self.category = category
         self.note = note
+        self.date_added = datetime.now(timezone.utc)
+        self.due_date = datetime.now(timezone.utc)
 
 
 
