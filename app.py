@@ -5,12 +5,20 @@ from sqlmodel import create_engine
 from flask_wtf import CSRFProtect
 from models import *
 from datetime import datetime
-import datetime
-import os
+from flask_mail import Mail, Message
+import datetime, os
 
 load_dotenv('.env')
 app = Flask(__name__)
 app.config['SECRET_KEY'] =  os.environ.get('SECRET_KEY')
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
+app.config['MAIL_PORT'] = os.environ.get('MAIL_PORT')
+app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL')
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
+app.config['TEST_EMAIL_ADDRESS'] = os.environ.get('TEST_EMAIL_ADDRESS')
+mail = Mail(app)
 csrf = CSRFProtect(app)
 db_engine = create_engine(os.environ.get('SQLALCHEMY_DATABASE_URI'))
 

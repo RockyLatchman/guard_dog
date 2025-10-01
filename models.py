@@ -1,3 +1,4 @@
+from flask import jsonify
 from os import name
 from typing import Optional, List
 from sqlmodel import Field, SQLModel, Relationship, Session, select
@@ -5,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timezone
 from passlib.hash import pbkdf2_sha256
 from enum import Enum
-import random
+
 
 class User(SQLModel, table=True):
     __tablename__ = 'users'
@@ -43,7 +44,10 @@ class User(SQLModel, table=True):
             return page_template['dashboard']
         return page_template['sign in']
 
-
+    def send_email(self, email, mail, page_template):
+        email.html = page_template
+        mail.send(email)
+        return jsonify({'status' : 200})
 
 
 class Account(SQLModel, table=True):
