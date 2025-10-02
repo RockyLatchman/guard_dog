@@ -3,7 +3,7 @@ from os import name
 from typing import Optional, List
 from sqlmodel import Field, SQLModel, Relationship, Session, select
 from sqlalchemy.exc import IntegrityError
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 from passlib.hash import pbkdf2_sha256
 from enum import Enum
 import random
@@ -56,6 +56,7 @@ class User(SQLModel, table=True):
 
 
 class Account(SQLModel, table=True):
+    __tablename__ = 'accounts'
     account_id : Optional[int] = Field(default=None, primary_key=True)
     user_id: Optional[int] = Field(default=None, foreign_key='users.user_id', exclude=True)
     name: str
@@ -63,22 +64,45 @@ class Account(SQLModel, table=True):
     email: str = Field(unique=True)
     password: str
     date_added: datetime
-    due_date: datetime
+    due_date: date
     amount: int
     category: str
     note: str | None = None
     user: Optional[User] = Relationship(back_populates='accounts')
 
-    def __init__(self, name: str, email: str, password: str, mobile: str, amount: int , category: str, note: str):
-        self.name = name
-        self.email = email
-        self.password = password
-        self.mobile = mobile
-        self.amount = amount
-        self.category = category
-        self.note = note
-        self.date_added = datetime.now(timezone.utc)
-        self.due_date = datetime.now(timezone.utc)
+    def __init__(
+        self,
+        name: str,
+        email: str,
+        password: str,
+        mobile: str,
+        amount: int ,
+        category: str,
+        note: str,
+        due_date: date,
+        user_id: Optional[int] = None):
+            self.name = name
+            self.email = email
+            self.password = password
+            self.mobile = mobile
+            self.amount = amount
+            self.category = category
+            self.note = note
+            self.date_added = datetime.now(timezone.utc)
+            self.due_date = due_date
+            self.user_id = user_id
+
+    def add(self, session: Session):
+        try:
+            session.add(self)
+            session.commit()
+            session.refresh(self)
+            return self
+        except:
+            session.rollback()
+            return 'Unable to save account'
+
+
 
 
 
