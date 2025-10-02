@@ -89,9 +89,10 @@ def homepage():
 def signin():
     return render_template('signin.html')
 
-@app.route('/forgot-password')
-@app.route('/forgot-password/')
+@app.route('/forgot-password', methods=['GET', 'POST'])
+@app.route('/forgot-password/', methods=['GET', 'POST'])
 def forgot_password():
+
     return render_template('forgot_password.html')
 
 @app.route('/check-email')
