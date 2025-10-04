@@ -129,6 +129,16 @@ class Account(SQLModel, table=True):
             session.rollback()
             raise ValueError('Unable to update account') from e
 
+    def remove(self, session: Session):
+        try:
+            session.delete(self)
+            session.commit()
+            return "Account item removed"
+        except IntegrityError as e:
+            session.rollback()
+            raise ValueError('Unable to remove account item') from e
+
+
 
 
 
