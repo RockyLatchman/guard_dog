@@ -114,7 +114,7 @@ class Account(SQLModel, table=True):
     def retrieve_all(self, session: Session):
         try:
            results = session.exec(select(Account).where(Account.user_id == self.user_id))
-           return [account for account in results]
+           return [accounts for accounts in results]
         except IntegrityError as e:
             session.rollback()
             raise ValueError('Unable to retrieve accounts') from e
@@ -174,6 +174,14 @@ class Note(SQLModel, table=True):
         except IntegrityError as e:
             session.rollback()
             raise ValueError('Unable to retrieve note') from e
+
+    def retrieve_all(self, session: Session):
+        try:
+           result = session.exec(select(Note).where(Note.user_id == self.user_id))
+           return [notes for notes in result]
+        except IntegrityError as e:
+            session.rollback()
+            raise ValueError('Unable to retrieve notes') from e
 
 
 
