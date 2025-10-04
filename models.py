@@ -193,7 +193,14 @@ class Note(SQLModel, table=True):
             session.rollback()
             raise ValueError('Unable to update note') from e
 
-
+    def remove(self, session: Session):
+        try:
+            session.delete(self)
+            session.commit()
+            return 'Note removed'
+        except IntegrityError as e:
+            session.rollback()
+            raise ValueError('Unable to remove note') from e
 
 
 class CharacterOptions(Enum):
