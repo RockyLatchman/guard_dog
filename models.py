@@ -102,6 +102,16 @@ class Account(SQLModel, table=True):
             session.rollback()
             return 'Unable to save account'
 
+    def retrieve_all(self, session: Session):
+        try:
+           results = session.exec(select(Account).where(Account.user_id == self.user_id))
+           return [account for account in results]
+        except IntegrityError as e:
+            session.rollback()
+            raise ValueError('Unable to retrieve account') from e
+
+
+
 
 
 
