@@ -1,4 +1,5 @@
 from flask import jsonify
+from flask_login import UserMixin
 from os import name
 from typing import Optional, List
 from sqlmodel import Field, SQLModel, Relationship, Session, select
@@ -20,12 +21,13 @@ class User(SQLModel, table=True):
     accounts: List['Account'] = Relationship(back_populates='user')
     notes: List['Note'] = Relationship(back_populates='user')
 
-    def __init__(self,  email: str, name=None, password=None):
+    def __init__(self,  email: str, name=None, user_id:  Optional[int] =  None, password=None):
        self.name = name
        self.email = email
        self.password = password
        self.date_added = datetime.now(timezone.utc)
        self.last_active = datetime.now(timezone.utc)
+       self.user_id = user_id
 
     def register(self, session: Session):
         try:
@@ -53,6 +55,14 @@ class User(SQLModel, table=True):
         email.html = page_template
         mail.send(email)
         return jsonify({'status' : 200})
+
+    def retrieve(self, session: Session):
+        try:
+            return session.exec(select(User).where(User.user_id == self.user_id)).one()
+        except IntegrityError as e:
+            session.rollback()
+            raise ValueError('Unable to retrieve user') from e
+
 
 
 class Account(SQLModel, table=True):

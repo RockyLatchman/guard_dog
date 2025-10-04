@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, jsonify, request
+from flask_login import login_required, LoginManager
 from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
 from sqlmodel import create_engine
@@ -20,9 +21,14 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 app.config['TEST_EMAIL_ADDRESS'] = os.environ.get('TEST_EMAIL_ADDRESS')
 mail = Mail(app)
 csrf = CSRFProtect(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view='homepage'
 db_engine = create_engine(os.environ.get('SQLALCHEMY_DATABASE_URI'))
 
-
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
 @app.errorhandler(404)
 def not_found(e):
@@ -42,7 +48,6 @@ def signin():
 @app.route('/forgot-password', methods=['GET', 'POST'])
 @app.route('/forgot-password/', methods=['GET', 'POST'])
 def forgot_password():
-
     return render_template('forgot_password.html')
 
 @app.route('/check-email')
@@ -89,46 +94,7 @@ def view_note(note_id):
 
 @app.route('/note/edit/<note_id>', methods=['GET', 'POST'])
 def edit_note(note_id):
-    notes = [
-        {
-            'note_id' : 1,
-            'user_id' : 3,
-            'title' : 'Walk the dog',
-            'note' : 'Walk the dog in the morning, around lunch and twice in the evening',
-            'category' : 'Chores',
-            'date_added' : datetime.date(2025, 2, 12)
-        },
-        {
-            'note_id' : 2,
-            'user_id' : 3,
-            'title' : 'Practice Thai',
-            'note' : 'One hour in the morning daily',
-            'category' : 'Study',
-            'date_added' : datetime.date(2025, 3, 14)
-        },
-        {
-            'note_id' : 3,
-            'user_id' : 3,
-            'title' : 'Call mom',
-            'note' : 'Be sure you call her at least once a week',
-            'category' : 'Appointment',
-            'date_added' : datetime.date(2025, 6, 24)
-        },
-        {
-            'note_id' : 4,
-            'user_id' : 1,
-            'title' : 'Schedule Dr Appt',
-            'note' : 'Call Dr Mason and schedule an appt next week',
-            'category' : 'Appointment',
-            'date_added' : datetime.date(2025, 4, 10)
-        }
-    ]
-    note = [note for note in notes if str(note['note_id']) == note_id]
-    if note:
-       return jsonify({'note' : note})
-    else:
-       return jsonify({'result' : 400})
-
+    pass
 
 @app.route('/note/remove/<note_id>', methods=['DELETE'])
 def remove_note(note_id):
