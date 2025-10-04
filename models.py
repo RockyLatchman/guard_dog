@@ -150,10 +150,12 @@ class Note(SQLModel, table=True):
     date_added: datetime
     user: Optional[User] = Relationship(back_populates='notes')
 
-    def __init__(self, title: str, note: str, category: str, user_id: Optional[int] = None):
+    def __init__(self, title: str, note: str, category: str, note_id: Optional[int] = None, user_id: Optional[int] = None):
        self.title = title
        self.note = note
        self.category = category
+       self.date_added = datetime.now(timezone.utc)
+       self.note_id = note_id
        self.user_id = user_id
 
     def add(self, session: Session):
@@ -166,6 +168,12 @@ class Note(SQLModel, table=True):
             session.rollback()
             raise ValueError('Unable to save note') from e
 
+    def retrieve_one(self, session: Session):
+        try:
+            return session.exec(select(Note).where(Note.note_id == self.note_id)).one()
+        except IntegrityError as e:
+            session.rollback()
+            raise ValueError('Unable to retrieve note') from e
 
 
 
