@@ -183,6 +183,16 @@ class Note(SQLModel, table=True):
             session.rollback()
             raise ValueError('Unable to retrieve notes') from e
 
+    def update(self, session: Session):
+        try:
+            session.add(self)
+            session.commit()
+            session.refresh(self)
+            return self
+        except IntegrityError as e:
+            session.rollback()
+            raise ValueError('Unable to update note') from e
+
 
 
 

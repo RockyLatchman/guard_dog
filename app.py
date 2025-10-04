@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from sqlmodel import create_engine
 from flask_wtf import CSRFProtect
 from models import *
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from flask_mail import Mail, Message
 import datetime, os
 
@@ -32,6 +32,22 @@ def not_found(e):
 @app.route('/register', methods=['GET','POST'])
 @app.route('/register/', methods=['GET','POST'])
 def homepage():
+    with Session(db_engine) as session:
+        note = Note(
+            note_id=3,
+            user_id= 1,
+            title='Call mom',
+            note='Call mom once a week',
+            category='Appointment'
+        )
+        current_note = note.retrieve_one(session)
+        current_note.note='Call mom at least once a week'
+        current_note.category='Appointments'
+        current_note.date_added=datetime.datetime.now(timezone.utc)
+        current_note.update(session)
+        print(current_note)
+
+
     return render_template('index.html')
 
 @app.route('/signin', methods=['GET','POST'])
