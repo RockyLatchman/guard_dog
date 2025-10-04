@@ -140,12 +140,8 @@ class Account(SQLModel, table=True):
 
 
 
-
-
-
-
-
 class Note(SQLModel, table=True):
+    __tablename__ = 'notes'
     note_id: Optional[int] = Field(default=None, primary_key=True)
     user_id: Optional[int] = Field(default=None, foreign_key='users.user_id', exclude=True)
     title: str
@@ -154,10 +150,22 @@ class Note(SQLModel, table=True):
     date_added: datetime
     user: Optional[User] = Relationship(back_populates='notes')
 
-    def __init__(self, title: str, note: str, category: str):
+    def __init__(self, title: str, note: str, category: str, user_id: Optional[int] = None):
        self.title = title
        self.note = note
        self.category = category
+       self.user_id = user_id
+
+    def add(self, session: Session):
+        try:
+            session.add(self)
+            session.commit()
+            session.refresh(self)
+            return self
+        except IntegrityError as e:
+            session.rollback()
+            raise ValueError('Unable to save note') from e
+
 
 
 
