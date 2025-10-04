@@ -80,7 +80,8 @@ class Account(SQLModel, table=True):
         category: str,
         note: str,
         due_date: date,
-        user_id: Optional[int] = None):
+        user_id: Optional[int] = None,
+        account_id: Optional[int] = None):
             self.name = name
             self.email = email
             self.password = password
@@ -91,6 +92,7 @@ class Account(SQLModel, table=True):
             self.date_added = datetime.now(timezone.utc)
             self.due_date = due_date
             self.user_id = user_id
+            self.account_id = account_id
 
     def add(self, session: Session):
         try:
@@ -102,15 +104,31 @@ class Account(SQLModel, table=True):
             session.rollback()
             return 'Unable to save account'
 
+
+    def retrieve_one(self, session: Session):
+       try:
+           return session.exec(select(Account).where(Account.account_id == self.account_id)).one()
+       except IntegrityError as e:
+           session.rollback()
+           raise ValueError('Unable to retrieve account') from e
+
     def retrieve_all(self, session: Session):
         try:
            results = session.exec(select(Account).where(Account.user_id == self.user_id))
            return [account for account in results]
         except IntegrityError as e:
             session.rollback()
-            raise ValueError('Unable to retrieve account') from e
+            raise ValueError('Unable to retrieve accounts') from e
 
-
+    def update(self, session: Session):
+        try:
+            account = session.exec(select(Account).where(Account.account_id == self.account_id)).one()
+            session.add(account)
+            session.commit()
+            session.refresh()
+            return self
+        except:
+            return 'Unable to update account'
 
 
 

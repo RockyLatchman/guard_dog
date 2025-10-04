@@ -33,6 +33,7 @@ def not_found(e):
 @app.route('/register/', methods=['GET','POST'])
 def homepage():
 
+
     return render_template('index.html')
 
 @app.route('/signin', methods=['GET','POST'])
