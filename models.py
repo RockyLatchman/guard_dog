@@ -104,7 +104,6 @@ class Account(SQLModel, table=True):
             session.rollback()
             return 'Unable to save account'
 
-
     def retrieve_one(self, session: Session):
        try:
            return session.exec(select(Account).where(Account.account_id == self.account_id)).one()
@@ -122,13 +121,13 @@ class Account(SQLModel, table=True):
 
     def update(self, session: Session):
         try:
-            account = session.exec(select(Account).where(Account.account_id == self.account_id)).one()
-            session.add(account)
+            session.add(self)
             session.commit()
-            session.refresh()
+            session.refresh(self)
             return self
-        except:
-            return 'Unable to update account'
+        except IntegrityError as e:
+            session.rollback()
+            raise ValueError('Unable to update account') from e
 
 
 
