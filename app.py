@@ -54,7 +54,7 @@ def signin():
                   next_page = url_for('dashboard')
               return redirect(next_page)
           else:
-              flash('Invalid username or password')
+              flash('Invalid username or password', 'error')
     return render_template('signin.html')
 
 @app.route('/forgot-password', methods=['GET', 'POST'])

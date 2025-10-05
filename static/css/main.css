@@ -23,6 +23,17 @@ ul li {
   list-style-type: none;
 }
 
+.flash-messages {
+  width: 185px;
+}
+
+.error {
+  background: rgba(255,0,0,0.9);
+  color: #fafafa !important;
+  margin-top: 10px;
+  padding: 2px !important;
+}
+
 .flex-container,
 .container {
   display: flex;
@@ -510,11 +521,17 @@ main {
 }
 
 .account-modal form label,
-.edit-account-modal form label {
+.edit-account-modal form label,
+.signin-card form label {
   display: inline-block;
   color: #001A38;
   font: 400 0.8em "Fira Sans", sans-serif;
   margin: 15px 0 5px 0;
+}
+
+.signin-card form input[type='checkbox']{
+  position: relative;
+  top: 2px;
 }
 
 .account-modal form textarea,
