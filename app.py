@@ -35,12 +35,6 @@ def load_user(user_id):
 def not_found(e):
     return render_template('404.html')
 
-@app.route('/', methods=['GET','POST'])
-@app.route('/register', methods=['GET','POST'])
-@app.route('/register/', methods=['GET','POST'])
-def homepage():
-    return render_template('index.html')
-
 @app.route('/signin', methods=['GET','POST'])
 @app.route('/signin/', methods=['GET','POST'])
 def signin():
@@ -56,6 +50,27 @@ def signin():
           else:
               flash('Invalid username or password', 'error')
     return render_template('signin.html')
+
+
+@app.route('/', methods=['GET','POST'])
+@app.route('/register', methods=['GET','POST'])
+@app.route('/register/', methods=['GET','POST'])
+def homepage():
+    if request.method == 'POST':
+        user = User(
+            name=request.form.get('name'),
+            email=request.form.get('email'),
+            password=request.form.get('password')
+        )
+        with Session(db_engine) as session:
+            user.register(session)
+            return redirect(url_for('account_confirmation'))
+    return render_template('index.html')
+
+@app.route('/account-confirmation')
+def account_confirmation():
+    return render_template('account_confirmation.html')
+
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 @app.route('/forgot-password/', methods=['GET', 'POST'])

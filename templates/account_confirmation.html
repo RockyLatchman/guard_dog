@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex-container">
+   <div class="left-column">
+       <header>
+           <div id="logo">
+               <img src="{{ url_for('static', filename='images/logo.png') }}">
+               <h1>Guard Dog</h1>
+           </div>
+       </header>
+       <div class="hero">
+           <h3>Online Password Manager</h3>
+           <p>Save passwords, account details and important notes</p>
+           <div class="features">
+               <ul>
+                  <li><i class="fa-solid fa-lock"></i>Secure passwords</li>
+                  <li><i class="fa-solid fa-clipboard-list"></i>Save notes</li>
+               </ul>
+           </div>
+       </div>
+   </div>
+   <div class="right-column">
+   <div class="signin-card check-email">
+    <h3><i class="fa-solid fa-envelope"></i>Account confirmation</h3>
+    <p>
+        Cool! you&apos;re registered but before you can continue you will need to confirm your account.
+        Check your e-mail, you should have recieved an email with a confirmation link
+    </p>
+    <ul>
+      <li>Didn&apos;t receive the e-mail? <a href="{{ url_for('send_link')}}">Resend link</a></li>
+    </ul>
+  </div>
+   </div>
+</div>
+{% endblock %}
