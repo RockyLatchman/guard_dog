@@ -8,6 +8,7 @@ from datetime import datetime, timezone, date
 from passlib.hash import pbkdf2_sha256
 from email_validator import validate_email, EmailNotValidError
 from enum import Enum
+from uuid import UUID, uuid4
 import random
 import base64
 
@@ -21,6 +22,7 @@ class User(SQLModel, UserMixin, table=True):
     last_active: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     accounts: List['Account'] = Relationship(back_populates='user')
     notes: List['Note'] = Relationship(back_populates='user')
+    tokens: List['Token'] = Relationship(back_populates='user')
 
     def __init__(self,  email: str, name=None, user_id:  Optional[int] =  None, password=None):
        self.name = name
@@ -72,7 +74,13 @@ class User(SQLModel, UserMixin, table=True):
             session.rollback()
             raise ValueError('Unable to retrieve user') from e
 
-
+class Token(SQLModel, table=True):
+    __tablename__ = 'tokens'
+    id: Optional[int] = Field(default=None, primary_key=True)
+    token_type: str = Field(default='Remember me')
+    token: UUID = Field(default_factory=uuid4, unique=True,index=True)
+    user_id: Optional[int] = Field(default=None, foreign_key='users.user_id')
+    user: User = Relationship(back_populates='tokens')
 
 class Account(SQLModel, table=True):
     __tablename__ = 'accounts'
