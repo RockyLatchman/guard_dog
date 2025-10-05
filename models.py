@@ -20,6 +20,7 @@ class User(SQLModel, UserMixin, table=True):
     password: str = Field(default=None)
     date_added: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     last_active: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    confirmed: bool = Field(default=False)
     accounts: List['Account'] = Relationship(back_populates='user')
     notes: List['Note'] = Relationship(back_populates='user')
     tokens: List['Token'] = Relationship(back_populates='user')
@@ -78,8 +79,21 @@ class User(SQLModel, UserMixin, table=True):
             raise ValueError('Unable to retrieve user') from e
 
     def generate_confirmation_token(self, secret_key):
-        current_time = datetime.now() + timedelta(minutes=15)
+        current_time = datetime.now(timezone.utc) + timedelta(minutes=15)
         jwt.encode({'user_id' : self.id, 'exp' : current_time}, secret_key, algorithm='HS256')
+
+    def confirm_token(self, token, session: Session):
+        try:
+            data = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return 'Token is expired'
+        if data['user_id'] != self.id:
+            return False
+        self.confirmed = True
+        session.add(self)
+        session.commit()
+        session.refresh(self)
+        return True
 
 
 class Token(SQLModel, table=True):
