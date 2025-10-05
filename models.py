@@ -6,11 +6,12 @@ from sqlmodel import Field, SQLModel, Relationship, Session, select
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timezone, date
 from passlib.hash import pbkdf2_sha256
+from email_validator import validate_email, EmailNotValidError
 from enum import Enum
 import random
 import base64
 
-class User(SQLModel, table=True):
+class User(SQLModel, UserMixin, table=True):
     __tablename__ = 'users'
     user_id: Optional[int] = Field(default=None, primary_key=True)
     name: Optional[str] = Field(default=None)
@@ -50,6 +51,14 @@ class User(SQLModel, table=True):
 
     def check_account_email(self, session: Session):
         pass
+
+    def validate_account_email(self):
+        try:
+            user_email = validate_email(self.email, check_deliverability=True)
+            return user_email.email
+        except EmailNotValidError as e:
+            return f"Invalid email address: {e}"
+
 
     def send_email(self, email, mail, page_template):
         email.html = page_template
