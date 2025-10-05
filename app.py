@@ -1,5 +1,5 @@
-from flask import Flask, render_template, redirect, url_for, jsonify, request
-from flask_login import login_required, LoginManager
+from flask import Flask, render_template, redirect, url_for, jsonify, request, flash
+from flask_login import LoginManager, login_required, logout_user
 from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
 from sqlmodel import create_engine
@@ -68,8 +68,11 @@ def password_reset():
     return render_template('password_reset.html')
 
 @app.route('/signout')
+@login_required
 def signout():
-    pass
+    logout_user()
+    flash('You have been signed out')
+    return redirect(url_for('index'))
 
 @app.route('/password-generator', methods=['GET', 'POST'])
 @app.route('/password-generator/', methods=['GET', 'POST'])
