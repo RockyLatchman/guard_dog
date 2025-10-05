@@ -3,7 +3,7 @@ from flask_login import UserMixin
 from os import name
 from typing import Optional, List
 from sqlmodel import Field, SQLModel, Relationship, Session, select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound
 from datetime import datetime, timezone, date
 from passlib.hash import pbkdf2_sha256
 from email_validator import validate_email, EmailNotValidError
@@ -14,23 +14,29 @@ import base64
 
 class User(SQLModel, UserMixin, table=True):
     __tablename__ = 'users'
-    user_id: Optional[int] = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
     name: Optional[str] = Field(default=None)
     email: str = Field(unique=True)
-    password: Optional[str] = Field(default=None)
+    password: str = Field(default=None)
     date_added: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     last_active: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     accounts: List['Account'] = Relationship(back_populates='user')
     notes: List['Note'] = Relationship(back_populates='user')
     tokens: List['Token'] = Relationship(back_populates='user')
 
-    def __init__(self,  email: str, name=None, user_id:  Optional[int] =  None, password=None):
+    def __init__(
+        self,
+        email: str,
+        password: str,
+        name=None,
+        id:  Optional[int] =  None
+    ):
        self.name = name
        self.email = email
        self.password = password
        self.date_added = datetime.now(timezone.utc)
        self.last_active = datetime.now(timezone.utc)
-       self.user_id = user_id
+       self.id = id
 
     def register(self, session: Session):
         try:
@@ -43,16 +49,16 @@ class User(SQLModel, UserMixin, table=True):
             session.rollback()
             raise ValueError('Registration failed') from e
 
-    def _verify_password(self, password: str):
+    def verify_password(self, password: str):
         return pbkdf2_sha256.verify(password, self.password)
 
-    def check_account_password(self, password, page_template):
-        if self._verify_password(password):
-            return page_template['dashboard']
-        return page_template['sign in']
+    @classmethod
+    def check_account_email(cls, email: str, session: Session):
+        try:
+            return session.exec(select(User).where(User.email == email)).one()
+        except NoResultFound:
+            return None
 
-    def check_account_email(self, session: Session):
-        pass
 
     def validate_account_email(self):
         try:
@@ -61,7 +67,6 @@ class User(SQLModel, UserMixin, table=True):
         except EmailNotValidError as e:
             return f"Invalid email address: {e}"
 
-
     def send_email(self, email, mail, page_template):
         email.html = page_template
         mail.send(email)
@@ -69,9 +74,8 @@ class User(SQLModel, UserMixin, table=True):
 
     def retrieve(self, session: Session):
         try:
-            return session.exec(select(User).where(User.user_id == self.user_id)).one()
-        except IntegrityError as e:
-            session.rollback()
+            return session.exec(select(User).where(User.id == self.id)).one()
+        except Exception as e:
             raise ValueError('Unable to retrieve user') from e
 
 class Token(SQLModel, table=True):
@@ -79,13 +83,13 @@ class Token(SQLModel, table=True):
     token_id: Optional[int] = Field(default=None, primary_key=True)
     token_type: str = Field(default='Remember me')
     token: UUID = Field(default_factory=uuid4, unique=True,index=True)
-    user_id: Optional[int] = Field(default=None, foreign_key='users.user_id')
+    user_id: Optional[int] = Field(default=None, foreign_key='users.id')
     user: User = Relationship(back_populates='tokens')
 
 class Account(SQLModel, table=True):
     __tablename__ = 'accounts'
     account_id : Optional[int] = Field(default=None, primary_key=True)
-    user_id: Optional[int] = Field(default=None, foreign_key='users.user_id', exclude=True)
+    user_id: Optional[int] = Field(default=None, foreign_key='users.id', exclude=True)
     name: str
     mobile: str
     email: str = Field(unique=True)
@@ -108,7 +112,8 @@ class Account(SQLModel, table=True):
         note: str,
         due_date: date,
         user_id: Optional[int] = None,
-        account_id: Optional[int] = None):
+        account_id: Optional[int] = None
+    ):
             self.name = name
             self.email = email
             self.password = password
@@ -134,16 +139,14 @@ class Account(SQLModel, table=True):
     def retrieve_one(self, session: Session):
        try:
            return session.exec(select(Account).where(Account.account_id == self.account_id)).one()
-       except IntegrityError as e:
-           session.rollback()
+       except Exception as e:
            raise ValueError('Unable to retrieve account') from e
 
     def retrieve_all(self, session: Session):
         try:
            results = session.exec(select(Account).where(Account.user_id == self.user_id))
            return [accounts for accounts in results]
-        except IntegrityError as e:
-            session.rollback()
+        except Exception as e:
             raise ValueError('Unable to retrieve accounts') from e
 
     def update(self, session: Session):
@@ -170,14 +173,20 @@ class Account(SQLModel, table=True):
 class Note(SQLModel, table=True):
     __tablename__ = 'notes'
     note_id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: Optional[int] = Field(default=None, foreign_key='users.user_id', exclude=True)
+    user_id: Optional[int] = Field(default=None, foreign_key='users.id', exclude=True)
     title: str
     note: str
     category: str
     date_added: datetime
     user: Optional[User] = Relationship(back_populates='notes')
 
-    def __init__(self, title: str, note: str, category: str, note_id: Optional[int] = None, user_id: Optional[int] = None):
+    def __init__(self,
+        title: str,
+        note: str,
+        category: str,
+        note_id: Optional[int] = None,
+        user_id: Optional[int] = None
+    ):
        self.title = title
        self.note = note
        self.category = category
@@ -198,16 +207,14 @@ class Note(SQLModel, table=True):
     def retrieve_one(self, session: Session):
         try:
             return session.exec(select(Note).where(Note.note_id == self.note_id)).one()
-        except IntegrityError as e:
-            session.rollback()
+        except Exception as e:
             raise ValueError('Unable to retrieve note') from e
 
     def retrieve_all(self, session: Session):
         try:
            result = session.exec(select(Note).where(Note.user_id == self.user_id))
            return [notes for notes in result]
-        except IntegrityError as e:
-            session.rollback()
+        except Exception as e:
             raise ValueError('Unable to retrieve notes') from e
 
     def update(self, session: Session):

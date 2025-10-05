@@ -22,9 +22,20 @@
    <div class="right-column">
     <div class="signin-card">
     <h3>Sign in</h3>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+       {% if messages %}
+          <ul class="flash-messages">
+            {% for category, message in messages %}
+               <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+          </ul>
+       {% endif %}
+    {% endwith %}
     <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
        <input type="email" name="email" placeholder="E-mail" required>
        <input type="password" name="password" placeholder="Password" required>
+       <label><input type="checkbox" name="remember_me" value="true">Remember me</label>
        <input type="submit" value="Sign in">
        <input type="submit" value="Sign up">
     </form>

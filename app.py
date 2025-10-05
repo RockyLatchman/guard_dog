@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, jsonify, request, flash
-from flask_login import LoginManager, login_required, logout_user
+from flask_login import LoginManager, login_required, login_user, logout_user
 from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
 from sqlmodel import create_engine
@@ -28,7 +28,8 @@ db_engine = create_engine(os.environ.get('SQLALCHEMY_DATABASE_URI'))
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    with Session(db_engine) as session:
+        return session.exec(select(User).where(User.id == user_id)).one()
 
 @app.errorhandler(404)
 def not_found(e):
@@ -43,6 +44,17 @@ def homepage():
 @app.route('/signin', methods=['GET','POST'])
 @app.route('/signin/', methods=['GET','POST'])
 def signin():
+    if request.method == 'POST':
+      with Session(db_engine) as session:
+          user_account = User.check_account_email(request.form.get('email'), session)
+          if user_account is not None and user_account.verify_password(request.form.get('password')):
+              login_user(user_account, request.form.get('remember_me'))
+              next_page = request.args.get('next')
+              if next_page is None or not next_page.startswith('/'):
+                  next_page = url_for('dashboard')
+              return redirect(next_page)
+          else:
+              flash('Invalid username or password')
     return render_template('signin.html')
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
@@ -73,6 +85,12 @@ def signout():
     logout_user()
     flash('You have been signed out')
     return redirect(url_for('index'))
+
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/password-generator', methods=['GET', 'POST'])
 @app.route('/password-generator/', methods=['GET', 'POST'])
