@@ -4,13 +4,13 @@ from os import name
 from typing import Optional, List
 from sqlmodel import Field, SQLModel, Relationship, Session, select
 from sqlalchemy.exc import IntegrityError, NoResultFound
-from datetime import datetime, timezone, date
+from datetime import datetime, timezone, date, timedelta
 from passlib.hash import pbkdf2_sha256
 from email_validator import validate_email, EmailNotValidError
 from enum import Enum
 from uuid import UUID, uuid4
 import random
-import base64
+import jwt
 
 class User(SQLModel, UserMixin, table=True):
     __tablename__ = 'users'
@@ -59,7 +59,6 @@ class User(SQLModel, UserMixin, table=True):
         except NoResultFound:
             return None
 
-
     def validate_account_email(self):
         try:
             user_email = validate_email(self.email, check_deliverability=True)
@@ -77,6 +76,11 @@ class User(SQLModel, UserMixin, table=True):
             return session.exec(select(User).where(User.id == self.id)).one()
         except Exception as e:
             raise ValueError('Unable to retrieve user') from e
+
+    def generate_confirmation_token(self, secret_key):
+        current_time = datetime.now() + timedelta(minutes=15)
+        jwt.encode({'user_id' : self.id, 'exp' : current_time}, secret_key, algorithm='HS256')
+
 
 class Token(SQLModel, table=True):
     __tablename__ = 'tokens'
