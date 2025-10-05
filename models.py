@@ -76,7 +76,7 @@ class User(SQLModel, UserMixin, table=True):
 
 class Token(SQLModel, table=True):
     __tablename__ = 'tokens'
-    id: Optional[int] = Field(default=None, primary_key=True)
+    token_id: Optional[int] = Field(default=None, primary_key=True)
     token_type: str = Field(default='Remember me')
     token: UUID = Field(default_factory=uuid4, unique=True,index=True)
     user_id: Optional[int] = Field(default=None, foreign_key='users.user_id')
@@ -237,8 +237,14 @@ class CharacterOptions(Enum):
     ALPHANUMERIC_SPECIAL= 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-=+$@#!~^%*(?<)>'
 
 class Utilities:
-    @classmethod
-    def password_generator(cls, password_length: int, characters_option : CharacterOptions) -> str:
+    @staticmethod
+    def password_generator(password_length: int, characters_option : CharacterOptions) -> str:
         characters = characters_option.value
         password_result = [random.choice(characters)for _ in range(int(password_length))]
         return ''.join(password_result)
+
+    @staticmethod
+    def generate_uuid():
+        ''' Generate uuid in a format that excludes hypens '''
+        import uuid
+        return str(uuid.uuid4()).replace('-', '')
