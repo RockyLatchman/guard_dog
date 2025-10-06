@@ -466,7 +466,8 @@ main {
 
 /* account confirmation */
 
-#signin-button {
+#signin-button,
+#password-reset-button {
   display: block;
   background: #31AFE6;
   font: 700 0.9em "Fira Sans", sans-serif;
