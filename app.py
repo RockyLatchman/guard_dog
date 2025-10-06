@@ -154,8 +154,10 @@ def check_email():
 
 @app.route('/change-password')
 def change_password():
+    if request.method == 'POST':
+        if User.compare(request.form.get('password'), request.form.get('confirm-password')):
+            return redirect(url_for('password_reset'))
     return render_template('change_password.html')
-
 
 @app.route('/password-reset')
 def password_reset():
