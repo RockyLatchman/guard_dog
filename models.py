@@ -1,5 +1,5 @@
 from flask import jsonify, render_template
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from os import name
 from typing import Optional, List
 from sqlmodel import Field, SQLModel, Relationship, Session, select

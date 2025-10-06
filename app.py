@@ -21,15 +21,25 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 app.config['TEST_EMAIL_ADDRESS'] = os.environ.get('TEST_EMAIL_ADDRESS')
 mail = Mail(app)
 csrf = CSRFProtect(app)
+db_engine = create_engine(os.environ.get('SQLALCHEMY_DATABASE_URI'))
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view='homepage'
-db_engine = create_engine(os.environ.get('SQLALCHEMY_DATABASE_URI'))
+
+class Anon(AnonymousUserMixin):
+    def confirm_token(self, token, secret_key, session: Session):
+        try:
+            data = jwt.decode(token, secret_key, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return 'Token is expired'
+        return True
+
+login_manager.anonymous_user = Anon
 
 @login_manager.user_loader
 def load_user(user_id):
     with Session(db_engine) as session:
-        return session.exec(select(User).where(User.id == user_id)).one()
+        return session.exec(select(User).where(User.id == user_id)).one() or None
 
 @app.errorhandler(404)
 def not_found(e):
@@ -73,8 +83,8 @@ def homepage():
                     'subject' : 'Account confirmation',
                     'sender' : app.config['MAIL_DEFAULT_SENDER'],
                     'recipient' : request.form.get('email'),
-                    'txt_template' : 'email.txt',
-                    'html_template' : 'email.html'
+                    'txt_template' : 'email/account_confirmation.txt',
+                    'html_template' : 'email/account_confirmation.html'
                 },
                 user=user,
                 token=token
@@ -108,24 +118,64 @@ def account_confirmed():
 @app.route('/forgot-password', methods=['GET', 'POST'])
 @app.route('/forgot-password/', methods=['GET', 'POST'])
 def forgot_password():
+    if request.method == 'POST':
+        with Session(db_engine) as session:
+            user = User.check_account_email(request.form.get('email'), session)
+            if user:
+                token = user.generate_confirmation_token(app.config['SECRET_KEY'])
+                user.send_email(
+                    mail_obj=mail,
+                    mail={
+                        'subject' : 'Reset password',
+                        'sender' : app.config['MAIL_DEFAULT_SENDER'],
+                        'recipient' : request.form.get('email'),
+                        'txt_template' : 'email/forgot_password.txt',
+                        'html_template' : 'email/forgot_password.html'
+                    },
+                    user=user,
+                    token=token
+                )
+                return redirect(url_for('check_email'))
     return render_template('forgot_password.html')
+
+
+@app.route('/password-reset/<token>')
+def reset_token(token):
+    with Session(db_engine) as session:
+        if current_user.confirm_token(token, app.config['SECRET_KEY'], session):
+            return redirect(url_for('change_password'))
+        else:
+            flash('The token expired')
+        return redirect(url_for('forgot_password'))
+
+
 
 @app.route('/check-email')
 def check_email():
     return render_template('check_email.html')
+
+
+@app.route('/change-password')
+def change_password():
+    return render_template('change_password.html')
+
+
+@app.route('/password-reset')
+def password_reset():
+    return render_template('password_reset.html')
+
+
+
+
+
 
 @app.route('/send-link')
 def send_link():
     #route to email link to user
     pass
 
-@app.route('/change-password')
-def change_password():
-    return render_template('change_password.html')
 
-@app.route('/password-reset')
-def password_reset():
-    return render_template('password_reset.html')
+
 
 @app.route('/signout')
 @login_required
