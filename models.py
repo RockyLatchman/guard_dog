@@ -92,6 +92,18 @@ class User(SQLModel, UserMixin, table=True):
         thr.start()
         return thr
 
+
+    def change_password(self, password: str, session: Session):
+        try:
+            result = session.exec(select(User).where(User.email == self.email)).one()
+            result.password = password
+            session.add(result)
+            session.commit()
+            session.refresh(self)
+        except IntegrityError as e:
+            raise ValueError('Unable to change password') from e
+
+
     def retrieve(self, session: Session):
         try:
             return session.exec(select(User).where(User.id == self.id)).one()

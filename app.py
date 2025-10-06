@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, jsonify, request, flash
+from flask import Flask, render_template, redirect, url_for, jsonify, request, flash, session
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
@@ -33,6 +33,15 @@ class Anon(AnonymousUserMixin):
         except jwt.ExpiredSignatureError:
             return 'Token is expired'
         return True
+
+    def change_password(self, email, password: str, session: Session):
+        try:
+            result = session.exec(select(User).where(User.email == email)).one()
+            result.password = pbkdf2_sha256.hash(password)
+            session.add(result)
+            session.commit()
+        except IntegrityError as e:
+            raise ValueError('Unable to change password') from e
 
 login_manager.anonymous_user = Anon
 
@@ -119,8 +128,8 @@ def account_confirmed():
 @app.route('/forgot-password/', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
-        with Session(db_engine) as session:
-            user = User.check_account_email(request.form.get('email'), session)
+        with Session(db_engine) as sess:
+            user = User.check_account_email(request.form.get('email'), sess)
             if user:
                 token = user.generate_confirmation_token(app.config['SECRET_KEY'])
                 user.send_email(
@@ -135,6 +144,7 @@ def forgot_password():
                     user=user,
                     token=token
                 )
+                session['temp_email'] = request.form.get('email')
                 return redirect(url_for('check_email'))
     return render_template('forgot_password.html')
 
@@ -152,11 +162,14 @@ def reset_token(token):
 def check_email():
     return render_template('check_email.html')
 
-@app.route('/change-password')
+@app.route('/change-password', methods=['GET', 'POST'])
 def change_password():
     if request.method == 'POST':
-        if User.compare(request.form.get('password'), request.form.get('confirm-password')):
-            return redirect(url_for('password_reset'))
+        if User.compare_passwords(request.form.get('password'), request.form.get('confirm-password')):
+            with Session(db_engine) as sess:
+                current_user.change_password(session.get('temp_email'), request.form.get('password'), sess)
+                return redirect(url_for('password_reset'))
+                session.pop('temp_email', None)
     return render_template('change_password.html')
 
 @app.route('/password-reset')
