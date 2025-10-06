@@ -148,12 +148,9 @@ def reset_token(token):
             flash('The token expired')
         return redirect(url_for('forgot_password'))
 
-
-
 @app.route('/check-email')
 def check_email():
     return render_template('check_email.html')
-
 
 @app.route('/change-password')
 def change_password():

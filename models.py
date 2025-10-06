@@ -71,6 +71,11 @@ class User(SQLModel, UserMixin, table=True):
             return f"Invalid email address: {e}"
 
     @staticmethod
+    def compare_passwords(password, confirm_password):
+        if password == confirm_password:
+            return True
+
+    @staticmethod
     def _send_async(app, message):
        with app.app_context():
            mail.send(message)
