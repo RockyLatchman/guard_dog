@@ -172,10 +172,22 @@ function generatePassword(){
   }
 }
 
+function blankForms(button, form){
+  const signinButton = document.querySelector(`${button}`);
+  const fields = document.querySelectorAll('input');
+  signinButton.addEventListener('click', (e) => {
+      document.querySelector(`${form}`).reset();
+      fields.forEach((field) => {
+        field.removeAttribute('required');
+      });
+  });
+}
+
 window.addEventListener('DOMContentLoaded', (e) => {
   addAccountItem();
   editAccountItem();
   addNote();
   editNote();
   generatePassword();
+  blankForms('#signin', '#registration-form');
 });

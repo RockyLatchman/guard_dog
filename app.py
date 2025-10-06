@@ -38,7 +38,7 @@ def not_found(e):
 @app.route('/signin', methods=['GET','POST'])
 @app.route('/signin/', methods=['GET','POST'])
 def signin():
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form.get('signin'):
       with Session(db_engine) as session:
           user_account = User.check_account_email(request.form.get('email'), session)
           if user_account is not None and user_account.verify_password(request.form.get('password')):
@@ -49,6 +49,8 @@ def signin():
               return redirect(next_page)
           else:
               flash('Invalid username or password', 'error')
+    if request.method == 'POST' and request.form.get('signup'):
+        return redirect(url_for('homepage'))
     return render_template('signin.html')
 
 
@@ -56,7 +58,7 @@ def signin():
 @app.route('/register', methods=['GET','POST'])
 @app.route('/register/', methods=['GET','POST'])
 def homepage():
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form.get('signup'):
         with Session(db_engine) as session:
             user = User(
                 name=request.form.get('fullname'),
@@ -78,6 +80,8 @@ def homepage():
                 token=token
             )
             return redirect(url_for('account_confirmation'))
+    if request.method == 'POST' and request.form.get('signin'):
+        return redirect(url_for('signin'))
     return render_template('index.html')
 
 @app.route('/account-confirmation')
@@ -128,7 +132,7 @@ def password_reset():
 def signout():
     logout_user()
     flash('You have been signed out')
-    return redirect(url_for('homepage'))
+    return redirect(url_for('signin'))
 
 
 @app.route('/dashboard')
