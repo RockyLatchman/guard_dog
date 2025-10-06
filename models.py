@@ -1,12 +1,15 @@
-from flask import jsonify
+from flask import jsonify, render_template
 from flask_login import UserMixin
 from os import name
 from typing import Optional, List
 from sqlmodel import Field, SQLModel, Relationship, Session, select
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from datetime import datetime, timezone, date, timedelta
+from flask_mail import Message
+from threading import Thread
 from passlib.hash import pbkdf2_sha256
 from email_validator import validate_email, EmailNotValidError
+from app import app, mail
 from enum import Enum
 from uuid import UUID, uuid4
 import random
@@ -67,10 +70,22 @@ class User(SQLModel, UserMixin, table=True):
         except EmailNotValidError as e:
             return f"Invalid email address: {e}"
 
-    def send_email(self, email, mail, page_template):
-        email.html = page_template
-        mail.send(email)
-        return jsonify({'status' : 200})
+    @staticmethod
+    def _send_async(app, message):
+       with app.app_context():
+           mail.send(message)
+
+    def send_email(self, mail_obj, mail, **kwargs):
+        message = Message(
+            subject=mail['subject'],
+            sender=mail['sender'],
+            recipients=[mail['recipient']]
+        )
+        message.body = render_template(mail['txt_template'], **kwargs)
+        message.html = render_template(mail['html_template'], **kwargs)
+        thr = Thread(target=User._send_async, args=[app, message])
+        thr.start()
+        return thr
 
     def retrieve(self, session: Session):
         try:
@@ -80,19 +95,18 @@ class User(SQLModel, UserMixin, table=True):
 
     def generate_confirmation_token(self, secret_key):
         current_time = datetime.now(timezone.utc) + timedelta(minutes=15)
-        jwt.encode({'user_id' : self.id, 'exp' : current_time}, secret_key, algorithm='HS256')
+        token = jwt.encode({'user_id' : self.id, 'exp' : current_time}, secret_key, algorithm='HS256')
+        return token
 
-    def confirm_token(self, token, session: Session):
+    def confirm_token(self, token, secret_key, session: Session):
         try:
-            data = jwt.decode(token, 'secret', algorithms=['HS256'])
+            data = jwt.decode(token, secret_key, algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
             return 'Token is expired'
         if data['user_id'] != self.id:
             return False
         self.confirmed = True
         session.add(self)
-        session.commit()
-        session.refresh(self)
         return True
 
 

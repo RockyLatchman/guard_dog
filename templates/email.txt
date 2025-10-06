@@ -1,0 +1,10 @@
+Hello {{ user.name }}
+
+Welcome to Guard Dog
+
+To confirm your account please click on the following link:
+
+{{ url_for('confirm', token=token, _external=True) }}
+
+
+Do not reply to this e-mail address

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, jsonify, request, flash
-from flask_login import LoginManager, login_required, login_user, logout_user
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
 from sqlmodel import create_engine
@@ -57,13 +57,26 @@ def signin():
 @app.route('/register/', methods=['GET','POST'])
 def homepage():
     if request.method == 'POST':
-        user = User(
-            name=request.form.get('name'),
-            email=request.form.get('email'),
-            password=request.form.get('password')
-        )
         with Session(db_engine) as session:
+            user = User(
+                name=request.form.get('fullname'),
+                email=request.form.get('email'),
+                password=request.form.get('password')
+            )
             user.register(session)
+            token = user.generate_confirmation_token(app.config['SECRET_KEY'])
+            user.send_email(
+                mail_obj=mail,
+                mail={
+                    'subject' : 'Account confirmation',
+                    'sender' : app.config['MAIL_DEFAULT_SENDER'],
+                    'recipient' : request.form.get('email'),
+                    'txt_template' : 'email.txt',
+                    'html_template' : 'email.html'
+                },
+                user=user,
+                token=token
+            )
             return redirect(url_for('account_confirmation'))
     return render_template('index.html')
 
@@ -71,6 +84,22 @@ def homepage():
 def account_confirmation():
     return render_template('account_confirmation.html')
 
+@app.route('/confirm/<token>')
+@login_required
+def confirm(token):
+    if current_user.confirmed:
+        return redirect(url_for('dashboard'))
+    with Session(db_engine) as session:
+        if current_user.confirm_token(token, app.config['SECRET_KEY'], session):
+            session.commit()
+            return redirect(url_for('account_confirmed'))
+        else:
+            flash('The confirmation link is invalid or has expired')
+        return redirect(url_for('signin'))
+
+@app.route('/confirmed')
+def account_confirmed():
+    return render_template('confirmed.html')
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 @app.route('/forgot-password/', methods=['GET', 'POST'])
@@ -99,7 +128,7 @@ def password_reset():
 def signout():
     logout_user()
     flash('You have been signed out')
-    return redirect(url_for('index'))
+    return redirect(url_for('homepage'))
 
 
 @app.route('/dashboard')

@@ -21,15 +21,18 @@
    </div>
    <div class="right-column">
    <div class="signin-card check-email">
-    <h3><i class="fa-solid fa-envelope"></i>Account confirmation</h3>
-    <p>
-      Cool! before you can continue you will need to confirm your account by signing in
-      and then clicking the confirmation link sent to your email
-    </p>
+    <h3><i class="fa-solid fa-envelope"></i>Success</h3>
+    <p>You are now confirmed</p>
+    {% if current_user.is_authenticated %}
+    <ul>
+      <li><a href="{{ url_for('dashboard')}}" id="dashboard-button">Click here for your dashboard</a></li>
+    </ul>
+    {% else %}
     <ul>
       <li><a href="{{ url_for('signin')}}" id="signin-button">Click here to Sign in</a></li>
       <li>Didn&apos;t receive the e-mail? <a href="{{ url_for('send_link')}}">Resend link</a></li>
     </ul>
+    {% endif %}
   </div>
    </div>
 </div>
