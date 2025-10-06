@@ -117,8 +117,8 @@ def confirm(token):
             session.commit()
             return redirect(url_for('account_confirmed'))
         else:
-            flash('The confirmation link is invalid or has expired')
-        return redirect(url_for('signin'))
+            flash('The confirmation link is invalid or has expired. Click the link below to continue')
+        return redirect(url_for('account_confirmed'))
 
 @app.route('/confirmed')
 def account_confirmed():
@@ -175,11 +175,6 @@ def change_password():
 @app.route('/password-reset')
 def password_reset():
     return render_template('password_reset.html')
-
-
-
-
-
 
 @app.route('/send-link')
 def send_link():

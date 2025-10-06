@@ -21,19 +21,26 @@
    </div>
    <div class="right-column">
    <div class="signin-card check-email">
-    <h3><i class="fa-solid fa-envelope"></i>Success</h3>
-    <p>You are now confirmed</p>
     {% if current_user.is_authenticated %}
-    <ul>
-      <li><a href="{{ url_for('dashboard')}}" id="dashboard-button">Click here for your dashboard</a></li>
-    </ul>
+        <h3><i class="fa-solid fa-envelope"></i>Success</h3>
+        <p>You are now confirmed</p>
+        <ul>
+          <li><a href="{{ url_for('dashboard')}}" id="dashboard-button">Click here for your dashboard</a></li>
+        </ul>
     {% else %}
-    <ul>
-      <li><a href="{{ url_for('signin')}}" id="signin-button">Click here to Sign in</a></li>
-      <li>Didn&apos;t receive the e-mail? <a href="{{ url_for('send_link')}}">Resend link</a></li>
-    </ul>
+        <h3><i class="fa-solid fa-envelope"></i>Confirmation was unsuccessful</h3>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+             {% for category, message from messages %}
+               <p class="{{ category }}">{{ message }}</p>
+             {% endfor %}
+           {% endif %}
+        {% endwith %}
+        <ul>
+          <li>Didn&apos;t receive the e-mail? <a href="{{ url_for('send_link')}}">Resend link</a></li>
+        </ul>
     {% endif %}
   </div>
-   </div>
+  </div>
 </div>
 {% endblock %}
